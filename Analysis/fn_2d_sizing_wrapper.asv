@@ -1,0 +1,83 @@
+function info = fn_2d_sizing_wrapper(exp_data, data, options)
+if isempty(exp_data) & isempty(data)
+    info.name = '2D sizing from image';
+    return;
+else
+    info = [];
+end;
+
+cmap = [gray(1:size(gray,1) / 2, :);jet(size(jet,1) / 2 + 1:end, :)];
+
+xs = options.select(:,1);
+zs = options.select(:,2);
+%extract key bit of data
+i1 = min(find(data.x > min(xs)));
+i2 = max(find(data.x < max(xs)));
+j1 = min(find(data.z > min(zs)));
+j2 = max(find(data.z < max(zs)));
+xr = data.x(i1:i2);
+zr = data.z(j1:j2);
+fr = data.f(i1:i2, j1:j2);
+
+%get the >-6db image
+max_val = max(max(abs(fr)));
+[jm, im] = find(abs(fr) == max_val);
+b = abs(fr) > (max_val / 2);
+
+%create the figure to show result
+figure;
+subplot(1,3,1);
+imagesc(data.x, data.z, abs(data.f));
+hold on;
+plot(xs([1,2,2,1,1]),zs([1,1,2,2,1]), 'y')
+axis equal; axis tight;
+
+subplot(1,3,2);
+imagesc(xr, zr, abs(fr));
+hold on;
+plot(xr(im), zr(jm), 'yo');
+axis equal; axis tight;
+
+subplot(1,3,3);
+% imagesc(xr, zr, b);
+% hold on;
+% axis equal; axis tight;
+
+%convert >-6db pts to just a list of coordinates
+[n, m] = find(b);
+xx = xr(m);
+zz = zr(n);
+[t, r] = cart2pol(xx, zz);
+plot(xx, zz, 'yx');
+
+%fit a rectangle at angle a
+a = linspace(0, pi / 2, 91);
+area = zeros(size(a));
+for ii = 1:length(a)
+    %rotate coordinates
+    [xxx, zzz] = pol2cart(t - a(ii), r);
+    %find limits
+    xmin = min(xxx);
+    xmax = max(xxx);
+    zmin = min(zzz);
+    zmax = max(zzz);
+    area(ii) = (xmax - xmin) * (zmax - zmin);
+    [trect, rrect] = cart2pol([xmin, xmax, xmax, xmin, xmin],[zmin, zmin, zmax, zmax, zmin]);
+    [xrect, zrect] = pol2cart(trect + a(ii), rrect);
+    %draw rectangle
+    subplot(1,3,2);
+    cla;
+    imagesc(xr, zr, abs(fr));
+    hold on;
+    plot(xr(im), zr(jm), 'yo');
+    plot(xrect, zrect, 'y');
+    pause(0.01);
+    axis equal; axis tight;
+    
+    subplot(1,3,3);
+    cla;
+    plot(a * 180 / pi, area);
+    xlim([0, 90]);
+end
+
+end

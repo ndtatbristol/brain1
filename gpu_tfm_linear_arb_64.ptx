@@ -1,0 +1,246 @@
+	.version 1.4
+	.target sm_10, map_f64_to_f32
+	// compiled with C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../open64/lib//be.exe
+	// nvopencc 4.1 built on 2012-09-25
+
+	//-----------------------------------------------------------
+	// Compiling C:/Users/ac8979/AppData/Local/Temp/tmpxft_00000f98_00000000-11_gpu_tfm_linear_arb.cpp3.i (C:/Users/ac8979/AppData/Local/Temp/ccBI#.a05800)
+	//-----------------------------------------------------------
+
+	//-----------------------------------------------------------
+	// Options:
+	//-----------------------------------------------------------
+	//  Target:ptx, ISA:sm_10, Endian:little, Pointer Size:64
+	//  -O3	(Optimization level)
+	//  -g0	(Debug level)
+	//  -m2	(Report advisories)
+	//-----------------------------------------------------------
+
+	.file	1	"C:/Users/ac8979/AppData/Local/Temp/tmpxft_00000f98_00000000-10_gpu_tfm_linear_arb.cudafe2.gpu"
+	.file	2	"c:\program files (x86)\microsoft visual studio 10.0\vc\include\codeanalysis\sourceannotations.h"
+	.file	3	"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../include\crt/device_runtime.h"
+	.file	4	"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../include\host_defines.h"
+	.file	5	"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../include\builtin_types.h"
+	.file	6	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\device_types.h"
+	.file	7	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\host_defines.h"
+	.file	8	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\driver_types.h"
+	.file	9	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\surface_types.h"
+	.file	10	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\texture_types.h"
+	.file	11	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\vector_types.h"
+	.file	12	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\builtin_types.h"
+	.file	13	"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../include\device_launch_parameters.h"
+	.file	14	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\crt\storage_class.h"
+	.file	15	"gpu_tfm_linear_arb.cu"
+	.file	16	"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.0\bin/../include\common_functions.h"
+	.file	17	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\math_functions.h"
+	.file	18	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\math_constants.h"
+	.file	19	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\device_functions.h"
+	.file	20	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_11_atomic_functions.h"
+	.file	21	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_12_atomic_functions.h"
+	.file	22	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_13_double_functions.h"
+	.file	23	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_20_atomic_functions.h"
+	.file	24	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_35_atomic_functions.h"
+	.file	25	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_20_intrinsics.h"
+	.file	26	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_30_intrinsics.h"
+	.file	27	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\sm_35_intrinsics.h"
+	.file	28	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\surface_functions.h"
+	.file	29	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\texture_fetch_functions.h"
+	.file	30	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\texture_indirect_functions.h"
+	.file	31	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\surface_indirect_functions.h"
+	.file	32	"c:\program files\nvidia gpu computing toolkit\cuda\v5.0\include\math_functions_dbl_ptx1.h"
+
+
+	.entry _Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1_ (
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__real_result,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__imag_result,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__n,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__combs,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__real_exp,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__img_exp,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__transmit,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__receive,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_time,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__time,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__tot_pix,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_x,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_y,
+		.param .s32 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_z,
+		.param .u64 __cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_amp)
+	{
+	.reg .u16 %rh<4>;
+	.reg .u32 %r<31>;
+	.reg .u64 %rd<33>;
+	.reg .f32 %f<34>;
+	.reg .pred %p<7>;
+	.loc	15	1	0
+$LDWbegin__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1_:
+	mov.u16 	%rh1, %ctaid.x;
+	mov.u16 	%rh2, %ntid.x;
+	mul.wide.u16 	%r1, %rh1, %rh2;
+	cvt.u32.u16 	%r2, %tid.x;
+	add.u32 	%r3, %r2, %r1;
+	ld.param.s32 	%r4, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__tot_pix];
+	setp.le.s32 	%p1, %r4, %r3;
+	@%p1 bra 	$Lt_0_3842;
+	.loc	15	9	0
+	ld.param.u64 	%rd1, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__time];
+	ld.global.f32 	%f1, [%rd1+0];
+	ld.global.f32 	%f2, [%rd1+4];
+	sub.f32 	%f3, %f2, %f1;
+	ld.param.s32 	%r5, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__combs];
+	mov.u32 	%r6, 0;
+	setp.le.s32 	%p2, %r5, %r6;
+	@%p2 bra 	$Lt_0_5378;
+	ld.param.s32 	%r5, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__combs];
+	mov.s32 	%r7, %r5;
+	ld.param.u64 	%rd2, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__transmit];
+	ld.param.u64 	%rd3, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__receive];
+	ld.param.u64 	%rd4, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_amp];
+	ld.param.u64 	%rd5, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_time];
+	ld.param.s32 	%r8, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_z];
+	ld.param.s32 	%r9, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_y];
+	ld.param.s32 	%r10, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_x];
+	mov.s32 	%r11, 0;
+	mov.f32 	%f4, 0f00000000;     	// 0
+	mov.f32 	%f5, 0f00000000;     	// 0
+	mov.s32 	%r12, %r7;
+$Lt_0_4866:
+ //<loop> Loop body line 9, nesting depth: 1, estimated iterations: unknown
+	.loc	15	14	0
+	ld.global.s32 	%r13, [%rd2+0];
+	sub.s32 	%r14, %r13, 1;
+	.loc	15	15	0
+	ld.global.s32 	%r15, [%rd3+0];
+	sub.s32 	%r16, %r15, 1;
+	.loc	15	9	0
+	ld.param.s32 	%r10, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_x];
+	.loc	15	19	0
+	mul.lo.s32 	%r17, %r14, %r10;
+	mul.lo.s32 	%r18, %r16, %r10;
+	.loc	15	9	0
+	ld.param.s32 	%r9, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_y];
+	.loc	15	19	0
+	mul.lo.s32 	%r19, %r17, %r9;
+	mul.lo.s32 	%r20, %r18, %r9;
+	.loc	15	9	0
+	ld.param.s32 	%r8, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__grid_z];
+	.loc	15	19	0
+	mul.lo.s32 	%r21, %r19, %r8;
+	add.s32 	%r22, %r3, %r21;
+	cvt.s64.s32 	%rd6, %r22;
+	mul.wide.s32 	%rd7, %r22, 4;
+	mul.lo.s32 	%r23, %r20, %r8;
+	add.s32 	%r24, %r3, %r23;
+	cvt.s64.s32 	%rd8, %r24;
+	mul.wide.s32 	%rd9, %r24, 4;
+	.loc	15	9	0
+	ld.param.u64 	%rd5, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_time];
+	.loc	15	19	0
+	add.u64 	%rd10, %rd7, %rd5;
+	ld.global.f32 	%f6, [%rd10+0];
+	add.u64 	%rd11, %rd9, %rd5;
+	ld.global.f32 	%f7, [%rd11+0];
+	add.f32 	%f8, %f6, %f7;
+	.loc	15	9	0
+	ld.param.u64 	%rd4, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__lookup_amp];
+	.loc	15	20	0
+	add.u64 	%rd12, %rd7, %rd4;
+	ld.global.f32 	%f9, [%rd12+0];
+	add.u64 	%rd13, %rd9, %rd4;
+	ld.global.f32 	%f10, [%rd13+0];
+	mul.f32 	%f11, %f9, %f10;
+	.loc	15	12	0
+	sub.f32 	%f12, %f8, %f1;
+	mov.f32 	%f13, 0f00000000;    	// 0
+	setp.lt.f32 	%p3, %f12, %f13;
+	@%p3 bra 	$Lt_0_5634;
+	ld.param.s32 	%r25, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__n];
+	cvt.s64.s32 	%rd14, %r25;
+	mul.wide.s32 	%rd15, %r25, 4;
+	.loc	15	9	0
+	ld.param.u64 	%rd1, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__time];
+	.loc	15	12	0
+	add.u64 	%rd16, %rd1, %rd15;
+	ld.global.f32 	%f14, [%rd16+-4];
+	setp.lt.f32 	%p4, %f14, %f8;
+	@%p4 bra 	$Lt_0_5890;
+	.loc	15	30	0
+	div.full.f32 	%f15, %f12, %f3;
+	cvt.s32.s64 	%r26, %rd14;
+	cvt.rmi.f32.f32 	%f16, %f15;
+	cvt.rzi.s32.f32 	%r27, %f16;
+	mul.lo.s32 	%r28, %r26, %r11;
+	add.s32 	%r29, %r27, %r28;
+	cvt.s64.s32 	%rd17, %r29;
+	mul.wide.s32 	%rd18, %r29, 4;
+	ld.param.u64 	%rd19, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__real_exp];
+	add.u64 	%rd20, %rd19, %rd18;
+	ld.global.f32 	%f17, [%rd20+0];
+	.loc	15	31	0
+	ld.param.u64 	%rd21, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__img_exp];
+	add.u64 	%rd22, %rd21, %rd18;
+	ld.global.f32 	%f18, [%rd22+0];
+	.loc	15	39	0
+	cvt.s64.s32 	%rd23, %r27;
+	mul.wide.s32 	%rd24, %r27, 4;
+	.loc	15	9	0
+	ld.param.u64 	%rd1, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__time];
+	.loc	15	39	0
+	add.u64 	%rd25, %rd1, %rd24;
+	ld.global.f32 	%f19, [%rd25+0];
+	sub.f32 	%f20, %f8, %f19;
+	ld.global.f32 	%f21, [%rd20+4];
+	sub.f32 	%f22, %f21, %f17;
+	mul.f32 	%f23, %f20, %f22;
+	div.full.f32 	%f24, %f23, %f3;
+	add.f32 	%f25, %f17, %f24;
+	mul.f32 	%f26, %f11, %f25;
+	.loc	15	41	0
+	ld.global.f32 	%f27, [%rd22+4];
+	sub.f32 	%f28, %f27, %f18;
+	mul.f32 	%f29, %f20, %f28;
+	div.full.f32 	%f30, %f29, %f3;
+	add.f32 	%f31, %f18, %f30;
+	mul.f32 	%f32, %f11, %f31;
+	bra.uni 	$L_0_3330;
+$Lt_0_5634:
+	mov.f32 	%f32, 0f00000000;    	// 0
+	mov.f32 	%f26, 0f00000000;    	// 0
+	bra.uni 	$L_0_3330;
+$Lt_0_5890:
+	mov.f32 	%f32, 0f00000000;    	// 0
+	mov.f32 	%f26, 0f00000000;    	// 0
+$L_0_3330:
+	.loc	15	44	0
+	add.f32 	%f5, %f26, %f5;
+	.loc	15	45	0
+	add.f32 	%f4, %f32, %f4;
+	add.s32 	%r11, %r11, 1;
+	add.u64 	%rd3, %rd3, 4;
+	add.u64 	%rd2, %rd2, 4;
+	.loc	15	9	0
+	ld.param.s32 	%r5, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__combs];
+	.loc	15	45	0
+	setp.ne.s32 	%p5, %r5, %r11;
+	@%p5 bra 	$Lt_0_4866;
+	bra.uni 	$Lt_0_4354;
+$Lt_0_5378:
+	mov.f32 	%f4, 0f00000000;     	// 0
+	mov.f32 	%f5, 0f00000000;     	// 0
+$Lt_0_4354:
+	.loc	15	50	0
+	cvt.s64.s32 	%rd26, %r3;
+	mul.wide.s32 	%rd27, %r3, 4;
+	ld.param.u64 	%rd28, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__real_result];
+	add.u64 	%rd29, %rd28, %rd27;
+	st.global.f32 	[%rd29+0], %f5;
+	.loc	15	51	0
+	ld.param.u64 	%rd30, [__cudaparm__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1__imag_result];
+	add.u64 	%rd31, %rd30, %rd27;
+	st.global.f32 	[%rd31+0], %f4;
+$Lt_0_3842:
+	.loc	15	53	0
+	exit;
+$LDWend__Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1_:
+	} // _Z18gpu_tfm_linear_arbPfS_iiPKfS1_PKiS3_S1_S1_iiiiS1_
+

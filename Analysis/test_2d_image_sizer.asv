@@ -1,0 +1,5 @@
+fn_clear;
+load('../test_2d_image.mat');
+options.select = [-18 ,17 ;-12, 23] * 1e-3;
+exp_data = [];
+info = fn_2d_sizing_wrapper(exp_data, data, options);
