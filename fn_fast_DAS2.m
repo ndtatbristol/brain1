@@ -83,6 +83,10 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
         hmc_data = focal_law.hmc_data;
     end
     
+    if ~isfield(focal_law, 'filter')
+        focal_law.filter=ones(size(exp_data.time));
+    end
+    
     if record_times
         varargout{1}.filter = double(toc);
     end

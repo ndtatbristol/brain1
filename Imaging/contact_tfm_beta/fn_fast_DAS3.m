@@ -75,6 +75,10 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
         focal_law.thread_size=128; %hard-coded nightmare! should be OK
     end
     
+    if ~isfield(focal_law, 'filter')
+        focal_law.filter=ones(size(exp_data.time));
+    end
+    
     if isfield(focal_law, 'lookup_time')
         sep_tx_rx_laws = 0;
         img_size=size(focal_law.lookup_time);
