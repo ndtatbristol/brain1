@@ -14,10 +14,43 @@ function brain(varargin)
 
 %close all windows etc. (but don't do a 'clear' as this causes problems
 %with instrument DLLs)
-
+evalin('base','close all, clear all')
 close all;
 clc;
 global SYSTEM_TYPES
+%first set of declarations create these as global variables on the
+%workspace, while the second set make them available in the function
+evalin('base','global Trans')
+evalin('base','global Resource')
+evalin('base','global TW')
+evalin('base','global TX')
+evalin('base','global Event')
+evalin('base','global Receive')
+evalin('base','global SeqControl')
+evalin('base','global TGC')
+evalin('base','global VDASupdates')
+evalin('base','global VDAS')
+evalin('base','global Control')
+evalin('base','global VSX_Control')
+evalin('base','global RcvProfile')
+evalin('base','global TPC')
+
+global Trans
+global Resource
+global TW
+global TX
+global Event
+global Receive
+global SeqControl
+global TGC
+global VDASupdates
+global VDAS
+global Control
+global VSX_Control
+global array
+global ph_velocity
+global RcvProfile
+global TPC
 
 %make sure no callbacks executed during setup
 callbacks_disabled = 1;
@@ -151,6 +184,11 @@ available_imaging = fn_get_available_imaging({config.files.imaging_path, fullfil
 
 %find available instruments
 available_instruments = fn_get_available_instruments(config.files.instruments_path);
+%determine which if any is verasonics
+for qq=1:length(available_instruments)
+   is_ver(qq)=strcmp(available_instruments(qq).instr_info.name,'Verasonics');
+end
+setup.verasonic=find(is_ver);
 
 %get list of available array files
 available_arrays = fn_get_available_arrays({config.files.arrays_path, fullfile(local_folder, config.files.local_brain_path, config.files.arrays_path)});
@@ -303,19 +341,7 @@ callbacks_disabled = 0;
         %and implement default if not found for backward compatibility
         
         callbacks_disabled = 1;
-        %select last instrument or 1 if not specified
-        if isfield(setup, 'current_instr')
-            fn_instrument_select(setup.current_instr);
-        else
-            fn_instrument_select(config.default_setup.current_instr);
-        end
-        
-        %fill up instrument control params
-        if isfield(setup, 'instr_options')
-            main.instr_panel.fn_set_data(setup.instr_options);
-        end
-        
-        %select last material or 1 if not specified
+         %select last material or 1 if not specified
         if isfield(setup, 'current_matl')
             fn_material_select(setup.current_matl);
         else
@@ -328,6 +354,19 @@ callbacks_disabled = 0;
         else
             fn_array_select(config.default_setup.current_array);
         end
+        
+        %select last instrument or 1 if not specified
+        if isfield(setup, 'current_instr')
+            fn_instrument_select(setup.current_instr);
+        else
+            fn_instrument_select(config.default_setup.current_instr);
+        end
+        
+        %fill up instrument control params
+        if isfield(setup, 'instr_options')
+            main.instr_panel.fn_set_data(setup.instr_options);
+        end
+              
         
         %create all defined processing windows
         if isfield(setup, 'gui_process_window')
@@ -468,23 +507,30 @@ callbacks_disabled = 0;
                 fn_save;
             case 'new'
                 fn_new_process();
-            case 'instr_connect'
-                fn_instrument_connect;
-            case 'instr_reset'
-                fn_instrument_reset;
-            case 'instr_select'
-                ii = get(main.instr_panel.h_instrument, 'value');
-                fn_instrument_select(ii);
-            case 'instr_play_once'
-                fn_play(1);
-            case 'instr_play'
-                fn_play(0);
             case 'material_select'
                 ii = get(main.instr_panel.h_material, 'value');
                 fn_material_select(ii);
             case 'array_select'
                 ii = get(main.instr_panel.h_array, 'value');
-                fn_array_select(ii);
+                fn_array_select(ii);                
+            case 'instr_connect'
+                array = fn_get_array;
+                [ph_velocity, vel_poly] = fn_get_ph_velocity;
+                fn_instrument_connect;
+            case 'instr_reset'
+                fn_instrument_reset;
+            case 'instr_select'
+                ii = get(main.instr_panel.h_instrument, 'value');
+                if ii==setup.verasonic
+                  array = fn_get_array;
+                  available_instruments(setup.verasonic).instr_info.options_info.pulse_freq.default=array.centre_freq./1e6;
+                end
+                fn_instrument_select(ii);
+            case 'instr_play_once'
+                fn_play(1);
+            case 'instr_play'
+                fn_play(0);
+            
         end
     end
 
@@ -683,7 +729,7 @@ callbacks_disabled = 0;
                     ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
                     'Waiting for data ...', ...
                     fps_string});
-                exp_data = available_instruments(setup.current_instr).fn_instr_acquire();
+                exp_data = available_instruments(setup.current_instr).fn_instr_acquire(main.instr_panel.fn_get_data());
                 if ~isempty(exp_data)
                     if ~isempty(time_of_last_frame) &~play_once
                         fps = 1 / toc(time_of_last_frame);
@@ -1033,6 +1079,10 @@ elseif strcmp(fname(end-2:end),'txt')==1
     exp_data=fn_m2m_convert([pathname, fname(1:end-4)]);
 else
     load([pathname, fname], '-mat');
+     
+    if exist('Trans')
+       [exp_data]=fn_verasonics_convert(Trans, Receive, RcvData);
+    end
 end
 
 

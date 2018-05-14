@@ -1,0 +1,68 @@
+function material = fn_input_new_material_details(pt)
+%opens window to enable user to input material properties for a material
+%that will be added to list and file added in pt directory
+
+config = fn_get_config;
+
+default_ph_velocity = 1000;
+default_name = 'New material';
+
+material.name = default_name;
+material.ph_velocity = default_ph_velocity;
+
+%figure size
+% width = 600;
+% height = 300;
+
+%create figure
+f = figure('Position', ...
+        [(config.general.screen_size_pixels(3) - config.new_matl_win.pixel_size(1)) / 2, ...
+        (config.general.screen_size_pixels(4) - config.new_matl_win.pixel_size(2)) / 2, ...
+        config.new_matl_win.pixel_size(1), ...
+        config.new_matl_win.pixel_size(2)] ,...
+    'MenuBar', 'none', ...
+    'NumberTitle', 'off', ...
+    'ToolBar', 'None', ...
+    'WindowStyle', 'Modal', ...
+    'Name', fn_get_fname, ...
+    'ResizeFcn', @fn_window_resize ...
+);
+
+h_ok_btn = uicontrol('Style', 'PushButton', 'String', 'OK', 'Callback', fn_ok);
+h_cancel_btn = uicontrol('Style', 'PushButton', 'String', 'Cancel');
+
+[h_table, h_fn_get_data, h_fn_set_data, h_fn_set_content, h_data_changed] = gui_options_table(f, [0,0,1,1], 'normalized', @fn_new_params);
+content_info.name.label = 'Name';
+content_info.name.default = default_name;
+content_info.name.type = 'string';
+
+content_info.ph_velocity.label = 'Nominal velocity (m/s)';
+content_info.ph_velocity.default = default_ph_velocity;
+content_info.ph_velocity.type = 'double';
+content_info.ph_velocity.constraint = [0.01, 100000];
+content_info.ph_velocity.multiplier = 1;
+
+h_fn_set_content(content_info);
+uiwait(f);
+
+    function fn_new_params(params)
+        material.name = params.name;
+        material.ph_velocity = params.ph_velocity;
+        set(f, 'Name', fn_get_fname)
+    end
+
+    function fn_save
+        save([pt, filesep, fn_get_fname, '.mat'], 'material');
+    end
+
+    function fname = fn_get_fname
+        fname = sprintf([material.name, ' (%i)'], round(material.ph_velocity));
+    end
+
+    function fn_window_resize(x, y)
+        p = getpixelposition(f);
+        setpixelposition(h_ok_btn, [1, 1, p(3) / 2, config.general.button_height_pixels]);
+        setpixelposition(h_cancel_btn, [p(3)/2, 1, p(3) / 2, config.general.button_height_pixels]);
+        setpixelposition(h_table, [1, config.general.button_height_pixels, p(3), p(4) - config.general.button_height_pixels]);
+    end
+end

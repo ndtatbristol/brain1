@@ -1,0 +1,471 @@
+function gui_main_window(varargin)
+%This is the function for the main window of the GUI and handles data
+%acquisition, exp_data loading and saving, and display of raw data. It also
+%contains the menu that enables processing windows to be launched,
+%depending on the availability of processing functions
+
+%close all windows etc.
+close all;
+clc;
+
+%if there is an argument, it should be the options structure at least at
+%present. Maybe this should be the filename of the last setup or blank
+%instead.
+if nargin < 1
+    options = [];
+else
+    options = varargin{1};
+end
+
+default_options.title = 'Bristol NDT Group - Array Control and Processing';
+default_options.version = 1;
+default_options.position = [0.1, 0.1, 0.8, 0.8];
+options = fn_set_default_fields(options, default_options);
+
+%load icons
+icons = [];
+load('.\Icons\icons_data.mat');
+
+%the master copy of exp_data is in this function and is the one either
+%loaded from file or acquired from an instrument. use exp_data = [] to
+%disable the displays etc.
+exp_data = [];
+
+%inst_options is the control structure for the instrument
+instr_options = [];
+
+%find available processes
+available_processes = fn_get_available_processes('.\Processes');
+
+%find available instruments
+available_instruments = fn_get_available_instruments('.\Instruments');
+% keyboard
+%get list of available array files
+available_arrays = fn_get_available_arrays('.\Arrays');
+
+%get list of available material files
+available_materials = fn_get_available_materials('.\Materials');
+
+fn_instr_connect = [];
+fn_instr_disconnect = [];
+fn_instr_reset = [];
+fn_instr_acquire = [];
+fn_send_instr_options = [];
+
+main_window_closing = 0;
+button_height = 24;
+current_instr = 1; 
+
+h_fn_simulate_new_data = @fn_simulate_new_data;
+
+%create the window
+main.handle = figure('MenuBar', 'none', ...
+    'NumberTitle', 'off', ...
+    'Units', 'Normalized', ...
+    'DeleteFcn', @fn_close_main_window, ...
+    'ResizeFcn', @fn_main_window_resize ...
+    );
+
+h_main_window = main.handle;
+
+fn_setup;
+fn_update;
+%--------------------------------------------------------------------------
+    function fn_main_window_resize(src, ev)
+        fn_instr_panel_resize([], []);
+    end
+
+    function fn_setup
+        %give the main window its name
+        set(main.handle, ...
+            'Name',  [options.title, sprintf(' (%.1f)', options.version)], ...
+            'Position', options.position);
+        
+        %set up the toolbar
+        main.toolbar.handle = uitoolbar(main.handle);
+        main.control(1).handle = uipushtool(main.toolbar.handle, ...
+            'CData', fn_get_cdata_for_named_icon(icons, 'Standard.SaveFigure'), ...
+            'TooltipString', 'Save set-up or data', ...
+            'Tag', 'save');
+        main.control(2).handle = uipushtool(main.toolbar.handle, ...
+            'CData', fn_get_cdata_for_named_icon(icons, 'Standard.FileOpen'), ...
+            'TooltipString', 'Load set-up or data', ...
+            'Tag', 'load');
+        for ii = 1:length(main.control)
+            set(main.control(ii).handle, 'HandleVisibility', 'Off', 'ClickedCallback', @cb_control);
+        end;
+        
+        %the plotting region for raw data
+        main.raw_panel.handle = uipanel('BorderType','none',...
+            'BackgroundColor', get(gcf, 'Color'),...
+            'Units', 'normalized',...
+            'Position', [0.25, 0, 0.75, 1],...
+            'Parent', main.handle, ...
+            'ResizeFcn', @fn_instr_panel_resize);
+        options.raw_display_options.axis_equal = 0;
+        options.raw_display_options.x_axis_sf = 1e6;
+        options.raw_display_options.z_axis_sf = 1;
+        
+        %the instrument control panel
+        main.instr_panel.handle = uipanel('BorderType','none',...
+            'BackgroundColor', get(gcf, 'Color'),...
+            'Units', 'normalized',...
+            'Position', [0, 0, 0.25, 1],...
+            'Parent', main.handle);
+        
+        %instrument control table
+        [main.instr_panel.h_table, main.instr_panel.fn_get_data, main.instr_panel.fn_set_data, main.instr_panel.fn_set_content] = ...
+            gui_options_table(main.instr_panel.handle, [0, 0, 1, 1], 'normalized', @fn_instr_options_changed);
+
+        %instrument select
+        for ii = 1:length(available_instruments)
+            strs{ii} = available_instruments(ii).instr_info.name;
+        end
+        main.instr_panel.h_instrument = uicontrol(main.instr_panel.handle, 'Style', 'PopUpMenu', 'String', strs, 'Tag', 'instr_select', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        clear strs;
+        for ii = 1:length(available_arrays)
+            strs{ii} = available_arrays(ii).name;
+        end
+        strs{end + 1} = 'From file';
+        main.instr_panel.h_array = uicontrol(main.instr_panel.handle, 'Style', 'PopUpMenu', 'String', strs, 'Tag', 'array_select', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        clear strs;
+        for ii = 1:length(available_materials)
+            strs{ii} = available_materials(ii).name;
+        end
+        main.instr_panel.h_material = uicontrol(main.instr_panel.handle, 'Style', 'PopUpMenu', 'String', strs, 'Tag', 'material_select', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        clear strs;
+        
+        %instrument control buttons
+        main.instr_panel.h_connect = uicontrol(main.instr_panel.handle, 'Style', 'ToggleButton', 'CData', fn_get_cdata_for_named_icon(icons, 'connect'), 'Tag', 'instr_connect', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        main.instr_panel.h_reset = uicontrol(main.instr_panel.handle, 'Style', 'PushButton', 'String', 'Reset', 'Tag', 'instr_reset', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        main.instr_panel.h_play = uicontrol(main.instr_panel.handle, 'Style', 'ToggleButton', 'CData', fn_get_cdata_for_named_icon(icons, 'play'), 'Tag', 'instr_play', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        main.instr_panel.h_play_once = uicontrol(main.instr_panel.handle, 'Style', 'PushButton', 'CData', fn_get_cdata_for_named_icon(icons, 'play-once'), 'Tag', 'instr_play_once', 'HandleVisibility', 'Off', 'Callback', @cb_control);
+        
+        if isfield(options, 'instr_settings')
+            main.instr_panel.fn_set_data(options.instr_settings);
+        end
+        
+        %this is just to populate the buttons, handles for updates etc. are
+        %initialised when processes launched
+        options.raw_display_options.custom_button = []; %make sure that only actual processes present are allowed (not those in last set up)
+        for ii = 1:length(available_processes)
+            ops = [];
+            ops.return_info = 1;
+            [dummy, dummy, info] = available_processes(ii).fn_process([], ops);
+
+            options.raw_display_options.custom_button(ii).string = info.name;
+            options.raw_display_options.custom_button(ii).function = @fn_new_process;
+        end
+        
+        %craete the main raw data panel with custom buttons for each
+        %process found
+        [main.raw_panel.fn_update, main.raw_panel.fn_get_display_options, main.raw_panel.fn_set_display_options] = gui_2d_plot_panel(main.raw_panel.handle, main.toolbar.handle);
+        main.raw_panel.fn_set_display_options(options.raw_display_options);
+        fn_setup_part2;
+    end
+
+    function fn_setup_part2
+        %determine the last running mode and act accordingly
+%         if ~isfield(options, 'mode')
+%             options.mode = 'file';
+%         end
+%         switch options.mode
+%             case 'file'
+%                 %load the last file if it exists
+%                 if isfield(options, 'last_exp_data_file')
+%                     if exist(options.last_exp_data_file, 'file')
+%                         tmp = load(options.last_exp_data_file);
+%                         exp_data = tmp.exp_data;
+%                         fn_emulator;
+%                     else
+%                         exp_data = [];
+%                     end;
+%                 end
+%             case 'instrument'
+%                 %make sure array can be selected
+%                 set(main.instr_panel.h_array, 'Enable', 'On');
+%                 %try to connect to the last instrument and acquire one set
+%                 %of exp_data
+%                 
+%                 %TODO
+%                 
+%         end
+        
+        %create all defined processing windows
+        if isfield(options, 'gui_process_window')
+            fig_exists = ones(length(options.gui_process_window), 1);
+            for ii = 1:length(options.gui_process_window)
+                [options.gui_process_window(ii).figure_handle, ...
+                options.gui_process_window(ii).fn_update_data_handle, ...
+                options.gui_process_window(ii).fn_get_options_handle, ...
+                options.gui_process_window(ii).fn_set_options_handle] = ...
+                    gui_process_window(options.gui_process_window(ii).process_options.fn_process, ...
+                    @fn_display_window_closing);
+                if ~isempty(options.gui_process_window(ii).figure_handle)
+                    fig_exists(ii) = 1;
+                    options.gui_process_window(ii).fn_set_options_handle(options.gui_process_window(ii));
+                else
+                    fig_exists(ii) = 0;
+                end
+            end
+            options.gui_process_window(find(fig_exists == 0)) = [];
+        end
+    end
+
+    function fn_instr_panel_resize(src,eventdata)
+        p = getpixelposition(main.instr_panel.handle);
+        
+        %array
+        row = 1;
+        setpixelposition(main.instr_panel.h_array, [    1,                  p(4) - button_height * row + 1,       p(3),       button_height]);
+        
+        %material
+        row = 2;
+        setpixelposition(main.instr_panel.h_material,[    1,                  p(4) - button_height * row + 1,       p(3),       button_height]);
+
+        %instrument select
+        row = 3;
+        setpixelposition(main.instr_panel.h_instrument, [1,                 p(4) - button_height * row + 1,   p(3),       button_height]);
+
+        %instrument controls
+        row = 4;
+        setpixelposition(main.instr_panel.h_connect, [  1,                  p(4) - button_height * row + 1,   p(3) / 4,   button_height]);
+        setpixelposition(main.instr_panel.h_reset, [    p(3) / 4 + 1,       p(4) - button_height * row + 1,   p(3) / 4,   button_height]);
+        setpixelposition(main.instr_panel.h_play, [     p(3) / 4 * 2 + 1,   p(4) - button_height * row + 1,   p(3) / 4,   button_height]);
+        setpixelposition(main.instr_panel.h_play_once, [p(3) / 4 * 3 + 1,   p(4) - button_height * row + 1,   p(3) / 4,   button_height]);
+        
+        %table fills rest
+        setpixelposition(main.instr_panel.h_table, [1, 1, p(3), p(4) - button_height * row]);
+    end
+
+    function fn_display_window_closing(fh)
+        if ~main_window_closing
+            if isfield(options, 'gui_process_window')
+                for ii = 1:length(options.gui_process_window)
+                    try
+                        if options.gui_process_window(ii).figure_handle == fh
+                            options.gui_process_window(ii) = [];
+                            break;
+                        end
+                    catch
+                        %nesc to avoid problems of window closing mid loop
+                    end
+                end
+            end
+        end
+    end
+
+    function fn_new_process(dummy)
+%         keyboard
+        jj = dummy.clicked_custom_button_index;
+        %add a new panel get a handle to the update function for the
+        %display
+        if isfield(options, 'gui_process_window')
+            ii = length(options.gui_process_window) + 1;
+        else
+            ii = 1;
+        end
+        [options.gui_process_window(ii).figure_handle, ...
+        options.gui_process_window(ii).fn_update_data_handle, ...
+        options.gui_process_window(ii).fn_get_options_handle, ...
+        options.gui_process_window(ii).fn_set_options_handle] = ...
+            gui_process_window( ...
+                available_processes(jj).fn_process, ...
+                @fn_display_window_closing, ...
+                exp_data);
+%             keyboard
+        options.gui_process_window(ii).fn_update_data_handle(exp_data);
+    end
+
+    function cb_control(src, ev)
+        tag = get(src, 'Tag');
+        switch(tag)
+            case 'load'
+                [tmp_exp_data, tmp_options] = fn_load_file;
+                if ~isempty(tmp_exp_data)
+                    exp_data = tmp_exp_data;
+%                     fn_emulator;
+                    fn_update;
+                    options.last_exp_data_file = tmp_options.last_exp_data_file;
+                    return;
+                end
+                if ~isempty(tmp_options)
+                    options = tmp_options;
+                    fn_reset;
+                end
+            case 'save'
+
+            case 'instr_connect'
+                if get(main.instr_panel.h_connect, 'Value')
+                    res = available_instruments(current_instr).fn_instr_connect();
+                else
+                    res = available_instruments(current_instr).fn_instr_disconnect();
+                    set(main.instr_panel.h_play, 'value', 0);
+                    res = 0;
+                end
+                set(main.instr_panel.h_connect, 'Value', res);
+            case 'instr_select'
+                ii = get(main.instr_panel.h_instrument, 'value');
+                fn_instrument_select(ii);
+            case 'instr_play_once'
+                exp_data = available_instruments(current_instr).fn_instr_acquire([]);
+                fn_complete_exp_data_fields;
+                fn_update;
+            case 'instr_play'
+                fn_free_run;
+        end
+    end
+
+    function fn_instrument_select(ii)
+        %stop continuous acquisition
+        set(main.instr_panel.h_play, 'value', 0);
+        %call disconnect on previous instrument
+        available_instruments(current_instr).fn_instr_disconnect();
+        %set new current instrument
+        current_instr = ii;
+        main.instr_panel.fn_set_content(available_instruments(current_instr).instr_info.options_info);
+        %do not connect until explicitly asked - force connect to off state
+        set(main.instr_panel.h_connect, 'Value', 0);
+    end
+
+    function fn_complete_exp_data_fields
+        if isempty(exp_data)
+            return;
+        end
+        ai = get(main.instr_panel.h_array, 'value');
+        %check it is a real array - last item in list is from file
+        if ai < length(get(main.instr_panel.h_array, 'String'))
+            exp_data.array = available_arrays(ai).array;
+        end
+        mi = get(main.instr_panel.h_material, 'value');
+        exp_data.ph_velocity = available_materials(mi).material.ph_velocity;
+    end
+
+    function fn_free_run
+        try
+            while get(main.instr_panel.h_play, 'value')
+                available_instruments(current_instr).fn_send_instr_options(ops);
+                exp_data = available_instruments(current_instr).fn_instr_acquire();
+                fn_complete_exp_data_fields;
+                fn_update;
+                pause(0.01);
+            end
+        catch
+            %just in case window is closing
+        end
+    end
+
+    function fn_update
+        %this is executed whenever new exp_data is loaded or acquired
+        if ~isempty(exp_data)
+            data.x = exp_data.time;
+            ii = find(exp_data.tx == exp_data.rx);
+            data.z = exp_data.tx(ii);
+            data.f = exp_data.time_data(:, ii)';
+            main.raw_panel.fn_update(data);
+            
+            %loop through all the processes and pump the data out to them
+%             keyboard
+            if isfield(options, 'gui_process_window')
+                for ii = 1:length(options.gui_process_window)
+                    try
+                        if ~isempty(options.gui_process_window(ii).fn_update_data_handle)
+                            options.gui_process_window(ii).fn_update_data_handle(exp_data);
+                        end
+                    catch
+                        %nesc because sometimes windows may be closed
+                        %mid-loop
+                    end
+                end
+            end
+        else
+            data = [];
+            main.raw_panel.fn_update(data);
+        end
+    end
+
+    function fn_reset
+        %this is executed whenever new setup is loaded
+        
+        %delete all child windows
+        if isfield(options, 'gui_process_window')
+            try
+                for ii = 1:length(options.gui_process_window)
+                    close(options.gui_process_window(ii).figure_handle);
+                end
+            catch
+            end
+        end
+        
+        %set up figure from scratch
+        fn_setup_part2;
+    end
+
+%     function fn_emulator
+        %used when either (a) an exp_data file is loaded or (b) the user
+        %selects emulator from the pull-down menu, in both cases the
+        %current exp_data is sent to the emulator to serve as the original
+        %data
+        
+        %initialise the emulator
+        %         [instr_info, fn_instr_connect, fn_instr_disconnect, fn_instr_reset, fn_instr_acquire, fn_send_instr_options] = fn_emulator_wrapper([]);
+%         current_instr = 1;
+%         main.instr_panel.fn_set_content(available_instruments(current_instr).instr_info.options_info);
+%         
+%         %disable the array selection options since the array data is
+%         %already in exp_data
+%         set(main.instr_panel.h_array, 'Value', length(get(main.instr_panel.h_array, 'String'))); %the last one in list is 'from file'
+%         set(main.instr_panel.h_array, 'Enable', 'Off');
+%         
+%         %send the current exp_data to the emulator
+%         ops.orig_exp_data = exp_data;
+%         ops.rel_noise_level = 0;
+%         available_instruments(current_instr).fn_instr_connect(ops);
+%         fn_update;
+%     end
+
+    function fn_close_main_window(src, ev) %captures the data from all process windows as they close and saves them
+        ready_for_data = 0;
+%         fn_instr_disconnect(); %disconnect instrument
+        main_window_closing = 1;
+        if isfield(options, 'gui_process_window')
+            for ii = 1:length(options.gui_process_window)
+                [options.gui_process_window(ii).process_options, options.gui_process_window(ii).display_options] = options.gui_process_window(ii).fn_get_options_handle([]);
+                options.gui_process_window(ii).position = get(options.gui_process_window(ii).figure_handle, 'Position');
+                close(options.gui_process_window(ii).figure_handle);
+            end
+        end
+        options.position = get(main.handle, 'Position');
+        options.raw_display_options = main.raw_panel.fn_get_display_options([]);
+        save('last setup.ndt', 'options');
+    end
+
+    function fn_instr_options_changed(ops)
+        available_instruments(current_instr).fn_send_instr_options(ops);
+        %need to decide what to do if running - maybe stop and send immediately if
+        %running othwise wait until next play before sending?
+    end
+    
+end
+
+function [exp_data, options] = fn_load_file
+filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
+filter{2,1} = '*.ndt'; filter{2,2} = 'Setup file (*.ndt)';
+[fname, pathname, filterindex] = uigetfile(filter);
+if ~ischar(fname)
+    %nothing selected
+    exp_data = [];
+    options = [];
+    return;
+end
+load([pathname, fname], '-mat');
+if exist('exp_data') == 1
+    options = [];
+    options.last_exp_data_file = [pathname, fname];
+    return;
+end
+if exist('options') == 1
+    exp_data = [];
+    return;
+end
+end

@@ -585,7 +585,7 @@ h_pan = pan;
         tag = get(src, 'Tag');
         switch tag
             case 'view.zoomin'
-                fn_radio_group2(h_toolbar, tag, 0);
+%                 fn_radio_group2(h_toolbar, tag, 0);
                 fn_zoom;
             case 'zoomout'
                 %                 fn_radio_group2(h_toolbar, tag, 0);
