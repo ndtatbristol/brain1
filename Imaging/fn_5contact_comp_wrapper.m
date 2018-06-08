@@ -148,7 +148,7 @@ data.z = options_with_precalcs.data.z;
 
 %the actual calculation
 data.f = fn_fast_DAS3(exp_data, options_with_precalcs.focal_law, options_with_precalcs.use_gpu_if_available);
-data.f = gather(data.f);
+%data.f = gather(data.f);
 data.geom = options_with_precalcs.geom;
 end
 

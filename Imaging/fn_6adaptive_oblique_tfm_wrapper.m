@@ -194,14 +194,14 @@ options_with_precalcs.geom.array.x = options_with_precalcs.geom.array.x + dx;
 % generate sample result 
 if ~options_with_precalcs.show_couplant_only
     sample_result = fn_fast_DAS3(exp_data, options_with_precalcs.sample_focal_law, options_with_precalcs.use_gpu_if_available);
-    sample_result = gather(sample_result);
+    %sample_result = gather(sample_result);
 end
 
 %generate couplant image if required (i.e. if surface has not been measured
 %as if it has, this has already been generated)
 if ~isfield(options_with_precalcs, 'couplant_result') %| (isfield(options_with_precalcs, 'couplant_result') && (all(size(options_with_precalcs.couplant_result) ~= size()))
     options_with_precalcs.couplant_result = fn_fast_DAS3(exp_data, options_with_precalcs.couplant_focal_law, options_with_precalcs.use_gpu_if_available);
-    options_with_precalcs.couplant_result = gather(options_with_precalcs.couplant_result);
+    %options_with_precalcs.couplant_result = gather(options_with_precalcs.couplant_result);
 end
 
 if ~options_with_precalcs.show_couplant_only

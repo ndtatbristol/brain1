@@ -40,7 +40,7 @@ config.files.original_matlab_icon_file = ['Icons', filesep, 'original-matlab-ico
 
 %Main window details - title and version
 config.main_win.title = 'BRAIN';
-config.main_win.version = 1.8;
+config.main_win.version = 1.81;
 config.main_win.non_maximised_position = [0.1, 0.1, 0.8, 0.8];
 config.main_win.gpu = 0;
 
