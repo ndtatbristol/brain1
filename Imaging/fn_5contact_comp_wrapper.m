@@ -88,6 +88,7 @@ if data_is_csm
         end
     end
 else
+    calc_focal_law_options.interpolation_method = lower(options.interpolation_method);
     options_with_precalcs.focal_law = fn_calc_tfm_focal_law2(exp_data, tmp_mesh, calc_focal_law_options);
     %effect of attenuation correction
     if options_with_precalcs.atten_correction_on
@@ -148,7 +149,9 @@ data.z = options_with_precalcs.data.z;
 
 %the actual calculation
 data.f = fn_fast_DAS3(exp_data, options_with_precalcs.focal_law, options_with_precalcs.use_gpu_if_available);
-%data.f = gather(data.f);
+if  isfield(options_with_precalcs.focal_law,'thread_size')
+   data.f=(gather(data.f));
+end
 data.geom = options_with_precalcs.geom;
 end
 
