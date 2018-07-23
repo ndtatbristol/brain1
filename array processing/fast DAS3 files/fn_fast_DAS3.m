@@ -108,7 +108,7 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
         method = 'Same Tx and RX laws';
     end
     
-    method = [method, ' (', focal_law.interpolation_method, ')'];
+    method = [method, ' (', lower(focal_law.interpolation_method), ')'];
     
     %define the area of the image field
     ndims=length(img_size);

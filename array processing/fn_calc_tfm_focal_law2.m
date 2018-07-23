@@ -26,6 +26,7 @@ end;
 default_options.angle_dep_vel = 0;
 default_options.angle_limit = 0;
 default_options.interpolation_method = 'linear';
+default_options.load_kernel = 1;
 
 options = fn_set_default_fields(options, default_options);
 
@@ -102,6 +103,7 @@ focal_law.interpolation_method = options.interpolation_method;
 
 focal_law.tt_ind = fn_optimise_focal_law2(focal_law, exp_data.tx, exp_data.rx);
 
-[focal_law]=fn_load_kernel(focal_law);
-
+if options.load_kernel
+    [focal_law]=fn_load_kernel(focal_law);
+end
 return;

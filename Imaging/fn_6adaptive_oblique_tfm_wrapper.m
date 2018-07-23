@@ -18,7 +18,7 @@ function varargout = fn_6adaptive_oblique_tfm_wrapper(exp_data, options, mode)
 name = 'Oblique TFM (beta)'; %name of process that appears on menu
 %force recalc of focal law if in surface measuring mode
 if strcmp(mode, 'process_only') && isfield(options, 'surface_type') && strcmp(options.surface_type, '|M|easured')% && isfield(options, 'show_couplant_only') && ~options.show_couplant_only
-    mode = 'recalc_and_process'; 
+    mode = 'recalc_and_process';
 end
 switch mode
     case 'return_name_only'
@@ -40,11 +40,11 @@ switch mode
         end
         varargout{1} = data;
         varargout{2} = options_with_precalcs;
-
+        
     case 'process_only'
         data = fn_process_using_precalcs(exp_data, options);
         varargout{1} = data;
-
+        
 end
 end
 
@@ -58,14 +58,14 @@ exp_data.ph_velocity = options_with_precalcs.ph_velocity;
 
 %set up grid and image axes
 if fn_return_dimension_of_array(exp_data.array) == 2
-    options_with_precalcs = []; 
+    options_with_precalcs = [];
     warndlg('2D arrays not yet supported','Warning')
     return;%
 end
 
 data_is_csm = length(unique(exp_data.tx)) == 1;
 if data_is_csm
-    options_with_precalcs = []; 
+    options_with_precalcs = [];
     warndlg('CSM data not yet supported','Warning');
     return
 end
@@ -91,7 +91,7 @@ switch options.surface_type
         end
         options_with_precalcs.rotation_in_xz_plane = options_with_precalcs.array_inc_angle;
         options_with_precalcs.translation_in_xz_plane = -r * [sin(options_with_precalcs.rotation_in_xz_plane); cos(options_with_precalcs.rotation_in_xz_plane)];
-
+        
         if isfield(options_with_precalcs, 'couplant_result')
             options_with_precalcs = rmfield(options_with_precalcs, 'couplant_result');
         end
@@ -117,7 +117,9 @@ if ~isfield(options_with_precalcs, 'couplant_result')
     %been produced
     tmp = exp_data.ph_velocity;
     exp_data.ph_velocity = options_with_precalcs.couplant_velocity;
+    options_with_precalcs.load_kernel = 0;
     options_with_precalcs.couplant_focal_law = fn_calc_tfm_focal_law2(exp_data, tmp_mesh, options_with_precalcs);
+    %options_with_precalcs.couplant_focal_law.interpolation_method = lower(options.interpolation_method);
     options_with_precalcs.couplant_focal_law.filter_on = 1;
     options_with_precalcs.couplant_focal_law.filter = fn_calc_filter(exp_data.time, options_with_precalcs.centre_freq, options_with_precalcs.centre_freq * options_with_precalcs.frac_half_bandwidth / 2);
     exp_data.ph_velocity = tmp;
@@ -191,17 +193,21 @@ end
 options_with_precalcs.geom.array.x = options_with_precalcs.geom.array.x + dx;
 
 
-% generate sample result 
+% generate sample result
 if ~options_with_precalcs.show_couplant_only
     sample_result = fn_fast_DAS3(exp_data, options_with_precalcs.sample_focal_law, options_with_precalcs.use_gpu_if_available);
-    %sample_result = gather(sample_result);
+    if  isfield(options_with_precalcs.sample_focal_law,'thread_size')
+        sample_result=(gather(sample_result));
+    end
 end
 
 %generate couplant image if required (i.e. if surface has not been measured
 %as if it has, this has already been generated)
 if ~isfield(options_with_precalcs, 'couplant_result') %| (isfield(options_with_precalcs, 'couplant_result') && (all(size(options_with_precalcs.couplant_result) ~= size()))
     options_with_precalcs.couplant_result = fn_fast_DAS3(exp_data, options_with_precalcs.couplant_focal_law, options_with_precalcs.use_gpu_if_available);
-    %options_with_precalcs.couplant_result = gather(options_with_precalcs.couplant_result);
+    if  isfield(options_with_precalcs.couplant_focal_law,'thread_size')
+        options_with_precalcs.couplant_result = gather(options_with_precalcs.couplant_result);
+    end
 end
 
 if ~options_with_precalcs.show_couplant_only
