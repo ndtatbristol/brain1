@@ -285,11 +285,15 @@ info.options_info.ph_velocity.multiplier = 1;
 if no_pixels == 30
     info.options_info.pixel_size.default = round(max([im_sz_xy, im_sz_z]) / no_pixels * 1e3*4)/(1e3*4);
 else
-    cen_freq=info.options_info.centre_freq.default;
-    max_freq = cen_freq + cen_freq .* info.options_info.frac_half_bandwidth.default ./ 2;
-    info.options_info.pixel_size.default = (info.options_info.ph_velocity.default ./ max_freq) /4; %divide by four is to account for nyquist frequency and out and back path length;
-    round_to=1e-5;
-    info.options_info.pixel_size.default = floor(info.options_info.pixel_size.default / round_to)*round_to;
+    if (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)
+        cen_freq=info.options_info.centre_freq.default;
+        max_freq = cen_freq + cen_freq .* info.options_info.frac_half_bandwidth.default ./ 2;
+        info.options_info.pixel_size.default = (info.options_info.ph_velocity.default ./ max_freq) /4; %divide by four is to account for nyquist frequency and out and back path length;
+        round_to=1e-5;
+        info.options_info.pixel_size.default = floor(info.options_info.pixel_size.default / round_to)*round_to;
+    else
+        info.options_info.pixel_size.default = round(max([im_sz_xy, im_sz_z]) / no_pixels * 1e3*4)/(1e3*4);
+    end
 end
 info.options_info.pixel_size.label = 'Pixel size (mm)';
 info.options_info.pixel_size.type = 'double';

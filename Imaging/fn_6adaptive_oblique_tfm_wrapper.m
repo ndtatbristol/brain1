@@ -119,7 +119,7 @@ if ~isfield(options_with_precalcs, 'couplant_result')
     exp_data.ph_velocity = options_with_precalcs.couplant_velocity;
     options_with_precalcs.load_kernel = 0;
     options_with_precalcs.couplant_focal_law = fn_calc_tfm_focal_law2(exp_data, tmp_mesh, options_with_precalcs);
-    %options_with_precalcs.couplant_focal_law.interpolation_method = lower(options.interpolation_method);
+    options_with_precalcs.couplant_focal_law.interpolation_method = lower(options.interpolation_method);
     options_with_precalcs.couplant_focal_law.filter_on = 1;
     options_with_precalcs.couplant_focal_law.filter = fn_calc_filter(exp_data.time, options_with_precalcs.centre_freq, options_with_precalcs.centre_freq * options_with_precalcs.frac_half_bandwidth / 2);
     exp_data.ph_velocity = tmp;
