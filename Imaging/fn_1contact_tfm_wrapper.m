@@ -197,7 +197,7 @@ if ~isempty(exp_data) && any(exp_data.array.el_yc)
     no_pixels = 30;
 else
     info.fn_display = @gui_2d_plot_panel;
-    info.display_options.interpolate = 1;
+    info.display_options.interpolate = 0;
     no_pixels = 100;
 end
 info.display_options.axis_equal = 1;
