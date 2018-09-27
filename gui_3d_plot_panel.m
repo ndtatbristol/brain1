@@ -569,7 +569,11 @@ h_pan = pan;
         xlabel('x (mm)');
         ylabel('y (mm)');
         zlabel('z (mm)');
-        h_light = light('Position',[5, 5, 10],'Style','infinite');
+        if verLessThan('matlab','R2016a')
+            h_light = light('Position',[5, 5, 10],'Style','infinite');
+        else
+            h_light = light('Position',-[5, 5, 10],'Style','infinite');
+        end
         
         h_axes.plot_xy = axes('Parent', h_panels.plot_2d, 'NextPlot', 'Add', 'Layer', 'Top', 'OuterPosition', [0,2/3,1,1/3], 'Visible', 'On', 'ButtonDownFcn', @cb_button_down_main);
         set(h_axes.plot_xy, 'DataAspectRatio', [1,1,1], 'ZDir', 'reverse', 'XTick' ,[], 'YTick', []);
