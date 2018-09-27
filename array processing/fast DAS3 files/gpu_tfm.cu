@@ -147,7 +147,7 @@ __global__ void tfm_near_hmc(float* real_result,float* imag_result,const int n,c
     }
 }
 
-__global__ void tfm_linear_norm(float* real_result,float* imag_result,const int n,const int combs, const float* real_exp,const float* img_exp,const int* transmit,const int* receive,const float* lookup_time,const float* time, const int tot_pix, const int grid_x, const int grid_y, const int grid_z, const float* lookup_amp){
+__global__ void tfm_linear_norm(float* real_result,float* imag_result,const int n,const int combs, const float* real_exp,const float* img_exp,const int* transmit,const int* receive,const float* lookup_time,const float* time, const int tot_pix, const int grid_x, const int grid_y, const int grid_z, const float* lookup_amp, const float* tt_weight){
 
 	// get pixel's coordinates
     int pix = blockIdx.x*blockDim.x+threadIdx.x;
@@ -166,7 +166,7 @@ __global__ void tfm_linear_norm(float* real_result,float* imag_result,const int 
                 int r_ind = (rx*grid_x*grid_y*grid_z)+pix;
 
                 float time_val = lookup_time[t_ind] + lookup_time[r_ind]; 
-                float amp_corr = lookup_amp[t_ind]*lookup_amp[r_ind];
+                float amp_corr = lookup_amp[t_ind]*lookup_amp[r_ind]*tt_weight[ii];
                 float time_diff = time_val-time[0];
                 if(time_diff<0){
                     }

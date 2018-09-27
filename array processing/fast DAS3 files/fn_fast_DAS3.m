@@ -215,7 +215,7 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             
             time= gpuArray(single(exp_data.time));
                                  
-            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp);
+            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp, tt_weight);
             
         case 'Different Tx and RX laws, FMC data (linear)'
             if ~isfield(focal_law, 'kern')
