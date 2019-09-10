@@ -182,7 +182,13 @@ end
 %generate couplant image if required (i.e. if surface has not been measured
 %as if it has, this has already been generated)
 if ~isfield(options_with_precalcs, 'couplant_result') %| (isfield(options_with_precalcs, 'couplant_result') && (all(size(options_with_precalcs.couplant_result) ~= size()))
+    options_with_precalcs.couplant_focal_law=rmfield(options_with_precalcs.couplant_focal_law,'kern');
+    options_with_precalcs.couplant_focal_law=rmfield(options_with_precalcs.couplant_focal_law,'thread_size');
     options_with_precalcs.couplant_result = fn_fast_DAS3(exp_data, options_with_precalcs.couplant_focal_law, options_with_precalcs.use_gpu_if_available);
+    if class(options_with_precalcs.couplant_result) == 'gpuArray';
+        tmp=gather(options_with_precalcs.couplant_result);
+        options_with_precalcs.couplant_result=tmp;
+    end
     if  isfield(options_with_precalcs.couplant_focal_law,'thread_size')
         options_with_precalcs.couplant_result = gather(options_with_precalcs.couplant_result);
     end

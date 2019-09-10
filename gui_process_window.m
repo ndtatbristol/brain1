@@ -161,6 +161,10 @@ h_fn_set_options = @fn_set_options;
             filter{5,1} = '*.mat'; filter{5,2} = 'Raw image data (*.mat)';
         end
         [fname, data_folder, filterindex] = uiputfile(filter, 'Save', [data_folder, filesep]);
+        if (fname == 0) % Added to catch Save Dialog exiting without a specified filename (e.g. cancel button hit)
+            %disp('No filename specified. Skipping')
+            return;
+        end
         if filterindex < 5
             saveas(fig_handle, fullfile(data_folder, fname));
         else
@@ -181,11 +185,16 @@ h_fn_set_options = @fn_set_options;
                 case 'recalc_and_process'
                     [display_data, process_options] = fn_imaging_process(exp_data, process_options, 'recalc_and_process');
                 case 'process_only'
-                    display_data = fn_imaging_process(exp_data, process_options, 'process_only');
+                    if (isfield(process_options, 'surface_type') && strcmp(process_options.surface_type, '|M|easured')>0)
+                        [display_data, process_options] = fn_imaging_process(exp_data, process_options, 'process_only');
+                    else
+                        display_data = fn_imaging_process(exp_data, process_options, 'process_only');
+                    end               
             end
             if isempty(display_data)
                 return;
             end
+            fn_set_process_options(process_options); % To update variables in table after calculation (if required)
             fn_update_display(display_data);
         end;
     end;
@@ -231,6 +240,7 @@ h_fn_set_options = @fn_set_options;
             process_options = old_options;
             [display_data, process_options] = fn_imaging_process(exp_data, process_options, 'recalc_and_process');
         end
+        fn_set_process_options(process_options);
         fn_update_display(display_data);
     end
 

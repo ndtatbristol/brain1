@@ -105,6 +105,11 @@ h_data_changed = @fn_data_changed;
 
 
     function cb_cell_select(h_table, eventdata)
+    
+        temp = get(h_table,'Data'); % Matlab suggested solution to removing selection
+        set(h_table,'Data',[]);     % https://stackoverflow.com/questions/19634250/how-to-deselect-cells-in-uitable-how-to-disable-cell-selection-highlighting#19654513
+        set(h_table,'Data', temp ); % Alternative in link rejected since it breaks GUI afterwards 
+    
         ij = eventdata.Indices;
         if isempty(ij)
             return;
@@ -161,8 +166,14 @@ else
 end
 x = min_val - 1;
 while x < min_val | x > max_val
-    x = inputdlg(sprintf([content.label, ' [%g to %g]'], [min_val, max_val]), ...
+    % Attempt to use newid.m which was written by Matlab to allow "Enter" keypress to activate OK/Cancel buttons
+    try
+        x = newid(sprintf([content.label, ' [%g to %g]'], [min_val, max_val]), ...
         'Input integer', 1, {num2str(content.current)});
+    catch
+        x = inputdlg(sprintf([content.label, ' [%g to %g]'], [min_val, max_val]), ...
+        'Input integer', 1, {num2str(content.current)});
+    end    
     if isempty(x)
         return;
     end;
@@ -183,8 +194,14 @@ end
 x = min_val - 1;
 
 while x < min_val | x > max_val
-    x = inputdlg(sprintf([content.label, ' [%g to %g]'], [min_val, max_val] / content.multiplier), ...
-        'Input float', 1, {num2str(content.current)});
+    % Attempt to use newid.m which was written by Matlab to allow "Enter" keypress to activate OK/Cancel buttons
+    try
+        x = newid(sprintf([content.label, ' [%g to %g]'], [min_val, max_val] / content.multiplier), ...
+            'Input float', 1, {num2str(content.current)});
+    catch
+        x = inputdlg(sprintf([content.label, ' [%g to %g]'], [min_val, max_val] / content.multiplier), ...
+            'Input float', 1, {num2str(content.current)});
+    end
     if isempty(x)
         return;
     end;

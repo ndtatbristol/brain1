@@ -63,6 +63,7 @@ h_plot_objects = fn_create_plot_objects;
 h_toolbar_btns = [];
 h_max_slider = [];
 h_range_slider = [];
+h_custom_button = [];
 
 %create the controls
 fn_create_controls;
@@ -336,22 +337,65 @@ h_pan = pan;
     end
 
     function fn_set_custom_buttons
-        %add custom buttons up the RH side (from bottom)
-        ch = findall(h_panels.control, 'tag', 'custom');
+        %add custom buttons up the bottom of plot display (above status bar)
+        ch = findall(h_panels.control2, 'tag', 'custom');
         if ~isempty(ch)
             delete(ch);
         end
+        radio_group=[]; radio_group2=[];
         %set the new controls
-        kk = length(h_toolbar_btns) + 1;
         if ~isempty(options.custom_button)
             for ii = 1:length(options.custom_button)
-                h_custom_button(kk).handle = uicontrol(h_panels.control, ...
-                    'String', options.custom_button(ii).string, ...
-                    'Style', 'pushbutton', ...
-                    'Callback', @cb_control, ...
-                    'Tag', 'custom');
-                kk = kk + 1;
+                if (isfield(options.custom_button(ii),'style'))
+                    if (strcmp(options.custom_button(ii).style,'radiobutton')>0)
+                        if (length(radio_group) < options.custom_button(ii).group || isempty(radio_group(options.custom_button(ii).group)))
+                            radio_group2(options.custom_button(ii).group)=ii;
+                            k=0;
+                            for jj=ii:length(options.custom_button)
+                                if (options.custom_button(jj).group == options.custom_button(ii).group)
+                                    k=k+1;
+                                end
+                            end
+
+                            %k=sum(options.custom_button(:).group == options.custom_button(ii).group);
+                            radio_group(options.custom_button(ii).group) = uibuttongroup(h_panels.control2,'Units', 'pixels','Position',[10+70*(ii-1) 0 70*k+10 20]) %,'SelectionChangedFcn',@cb_control);
+                            
+                        end
+                        
+                        h_custom_button(ii).handle = uicontrol(radio_group(options.custom_button(ii).group), ...
+                            'String', options.custom_button(ii).string, ...
+                            'Style', options.custom_button(ii).style, ...
+                            'Tag', 'custom',...
+                            'Callback', @cb_control, ...
+                            'HandleVisibility','off', ...
+                            'Position',[10+65*(ii-radio_group2(options.custom_button(ii).group)) 0 60 20]);
+                        if (ii == radio_group2(options.custom_button(ii).group))
+                            fn_handle_custom_button_push(options.custom_button(ii).string,h_custom_button(ii).handle.Value);
+                        end
+                    else
+                        h_custom_button(ii).handle = uicontrol(h_panels.control2, ...
+                            'String', options.custom_button(ii).string, ...
+                            'Style', options.custom_button(ii).style, ...
+                            'Callback', @cb_control, ...
+                            'Tag', 'custom',...
+                            'Position',[10+70*(ii-1) 0 65 20]);
+                        if ((strcmp(options.custom_button(ii).style,'checkbox')>0 || strcmp(options.custom_button(ii).style,'togglebutton')>0) && isfield(options.custom_button(ii),'defaultValue'))
+                            h_custom_button(ii).handle.Value=options.custom_button(ii).defaultValue;
+                        end    
+                        fn_handle_custom_button_push(options.custom_button(ii).string,h_custom_button(ii).handle.Value);
+                    end
+                    
+                else
+                    h_custom_button(ii).handle = uicontrol(h_panels.control2, ...
+                        'String', options.custom_button(ii).string, ...
+                        'Style', 'pushbutton', ...
+                        'Callback', @cb_control, ...
+                        'Tag', 'custom');
+                    fn_handle_custom_button_push(options.custom_button(ii).string,h_custom_button(ii).handle.Value);    
+                end
+                
             end;
+            fn_resize; % force resize
         end;
         fn_resize_control_bar;
     end
@@ -471,6 +515,9 @@ h_pan = pan;
         h_panels.control = uipanel('Parent', h_panel, ...
             'BorderType',config.plot_panel_2d.control_panel.border_type, ...
             'BackgroundColor', config.general.window_bg_color);
+        h_panels.control2 = uipanel('Parent', h_panel, ...
+            'BorderType', config.plot_panel_2d.status_panel.border_type, ...
+            'BackgroundColor', config.general.window_bg_color);  
         fn = fieldnames(h_panels);
         %         for ii = 1:length(fn)
         %             set(getfield(h_panels, fn{ii}), ...
@@ -498,15 +545,39 @@ h_pan = pan;
             %global max is always the maximum value in the data
             options.global_max = max(max(abs(orig_data.f)));
             if options.auto_normalise
-                options.norm_val = options.global_max;
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                    options.norm_val = 1;
+                else
+                    if isfield(orig_data,'normalisation_factor')
+                        options.norm_val = 1; % Data has been preivously normalised, so use 1
+                    else
+                        options.norm_val = options.global_max;
+                    end
+                end
             end
             %other limits are only set if undefined
             %             keyboard
             if isempty(options.max_val)|isempty(options.db_range)|isempty(options.norm_val)
                 %initial set of limits (for plotting) and normalisation value
-                options.norm_val = options.global_max; %value against which everything is normalised, including max_val
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                    options.norm_val = 1;
+                else
+                    if isfield(orig_data,'normalisation_factor')
+                        options.norm_val = 1; % Data has been preivously normalised, so use 1
+                    else
+                        options.norm_val = options.global_max; %value against which everything is normalised, including max_val
+                    end
+                end
                 options.max_val = 1; %maximum normalised value to plot (used for linear and dB scales)
-                options.db_range = 40; %db range for dB scale only
+                if (isfield(orig_data,'combined_plot') || isfield(orig_data,'mask'))
+                    if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                        options.db_range = 24; %db range for dB scale only
+                    else
+                        options.db_range = 60; %db range for dB scale only
+                    end
+                else
+                    options.db_range = 40; %db range for dB scale only
+                end
                 fn_set_sliders;
             end;
             %sort out x and z axes to be just vectors
@@ -539,7 +610,15 @@ h_pan = pan;
             options.global_max = 1;
             options.norm_val = 1;
             options.max_val = 1;
-            options.db_range = 40; %db range for dB scale only
+            if (isfield(orig_data,'combined_plot') || isfield(orig_data,'mask'))
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                    options.db_range = 24; %db range for dB scale only
+                else
+                    options.db_range = 60; %db range for dB scale only
+                end
+            else
+                options.db_range = 40; %db range for dB scale only
+            end
         end
     end
 
@@ -551,7 +630,13 @@ h_pan = pan;
         %         p(3:4) = p(3:4) - 2;
         setpixelposition(h_panels.control, [p(3) - slider_width_pixels, status_height_pixels + 1, slider_width_pixels, p(4) - status_height_pixels]);
         setpixelposition(h_panels.status, [1, 1, p(3), status_height_pixels]);
-        setpixelposition(h_panels.plot, [1, status_height_pixels + 1, p(3) - slider_width_pixels, p(4) - status_height_pixels]);
+        if (isfield(options,'custom_button') && ~isempty(options.custom_button))
+            control2_height_pixels=round(status_height_pixels*0.5);
+        else
+            control2_height_pixels=0;
+        end
+        setpixelposition(h_panels.control2, [1, status_height_pixels + 1, p(3)- slider_width_pixels, control2_height_pixels]);
+        setpixelposition(h_panels.plot, [1, status_height_pixels + control2_height_pixels + 1, p(3) - slider_width_pixels, p(4) - status_height_pixels - control2_height_pixels]);
         fn_resize_control_bar;
     end
 
@@ -626,7 +711,8 @@ h_pan = pan;
                 fn_update_graphs;
                 fn_set_sliders;
             case 'custom'
-                fn_handle_custom_button_push(get(src, 'String'));
+                fn_handle_custom_button_push(get(src, 'String'),src.Value);
+                fn_update_graphs
             case 'range'
                 fn_range_change(src);
                 fn_update_graphs;
@@ -725,11 +811,12 @@ h_pan = pan;
         end
     end
 
-    function fn_handle_custom_button_push(nm)
+    function fn_handle_custom_button_push(nm,value)
         for ii = 1:length(options.custom_button)
             if strcmp(options.custom_button(ii).string, nm)
                 options.clicked_custom_button_index = ii;
-                feval(options.custom_button(ii).function, options);
+                options.value=value;
+                options=feval(options.custom_button(ii).function, options);
                 options.clicked_custom_button_index = [];
                 return;
             end;
@@ -774,6 +861,83 @@ h_pan = pan;
             return;
         end
         
+        if ~isempty(options.custom_button)
+            for ii = 1:length(options.custom_button)
+                if (isfield(options.custom_button(ii),'enable_function') && ~isempty(options.custom_button(ii).enable_function))
+                    status=feval(options.custom_button(ii).enable_function,orig_data,options);
+                    h_custom_button(ii).handle.Enable=status;
+                end
+            end
+        end
+        
+        %mask if necessary
+        if (isfield(orig_data,'mask') && isfield(orig_data,'masking_function'))
+            orig_data=feval(orig_data.masking_function,orig_data,options);
+            
+            
+            if options.auto_normalise
+                options.global_max = orig_data.fmax;
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                    options.norm_val = 1;
+                else
+                    if isfield(orig_data,'normalisation_factor')
+                        options.norm_val = 1; % Data has been preivously normalised, so use 1
+                    else
+                        options.norm_val = options.global_max;
+                    end
+                end
+            end
+            
+            if (isfield(options,'pvalues_active') && options.pvalues_active > 0)
+                options.scale_mode='linear';
+            else
+                options.scale_mode='log';
+            end
+            switch options.scale_mode
+                case 'log'
+                    fn_set_control_status(h_toolbar, 'scale.log', 1);
+                    fn_set_control_status(h_toolbar, 'scale.linear', 0);
+                case 'linear'
+                    fn_set_control_status(h_toolbar, 'scale.log', 0);
+                    fn_set_control_status(h_toolbar, 'scale.linear', 1);
+            end
+            fn_set_sliders;
+        end
+        
+        %Adjust max value if levelling button has been activated
+        if (((isfield(orig_data,'display_type') && ~isfield(options,'display_type_old')) || (isfield(orig_data,'display_type') && strcmp(orig_data.display_type,options.display_type_old)<1)) )
+            options.levelling_changed=0;
+            options.display_type_old=orig_data.display_type;
+                
+            %adjust range value for levelling & combined plots, otherwise default to 40
+            if (isfield(orig_data,'combined_plot') || isfield(orig_data,'mask'))
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                    options.db_range = 24; %db range for dB scale only
+                else
+                    options.db_range = 60; %db range for dB scale only
+                end
+            else
+                options.db_range = 40; %db range for dB scale only
+            end
+            if (strcmp(options.scale_mode,'log')>0)
+                if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                   
+                    h_max_slider.Value=12+50;
+                    fn_range_change(h_max_slider);
+                else
+                    h_max_slider.Value=0+50;
+                    fn_range_change(h_max_slider);
+                end
+            end
+            
+            if isfield(options,'pvalues_active') && options.pvalues_active > 0
+                options.global_max=1.0;
+                options.norm_val=1.0;
+                options.max_val=0.01;               
+            
+            end
+        end
+        
         %interpolate
         if isfield(h_fn_get_options(),'gpu')
             if options.interpolate
@@ -809,7 +973,12 @@ h_pan = pan;
                 plot_data.z = orig_data.z(1) + dz1 * [0: nz2 - 1] / nz2 * nz1;
             else
                 plot_data = orig_data;
+                
             end
+        end
+        
+        if (isfield(options,'pvalues_active') && options.pvalues_active>1 && isfield(orig_data,'f2'))
+            plot_data.f=plot_data.f2;
         end
         
         %update main graph
@@ -822,11 +991,113 @@ h_pan = pan;
             'YData', [min(plot_data.z), max(plot_data.z)] * options.z_axis_sf, ...
             'CData' , plot_val, ...
             'Visible', 'On');
+            
+        %Set NaN values to transparent 
+        set(h_plot_objects.image,'alphadata',~isnan(plot_val));         
+            
         if ~data_has_been_plotted
             axis(h_axes.main, [options.global_x_lim * options.x_axis_sf, options.global_z_lim * options.z_axis_sf]);
         end
-        caxis(h_axes.main, limits);
-              
+        
+        %Axis scale if combined
+        if (isfield(orig_data,'combined_plot') && orig_data.combined_plot>0 && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active')))
+            full_width=orig_data.xfull;
+            full_height=orig_data.zfull;
+            dx=orig_data.x(2)-orig_data.x(1);
+            dz=orig_data.z(2)-orig_data.z(1);
+            dz=dz*full_height;
+            dx=dx*full_width;
+            dz=dz/dx;
+            vec1=[dz 1 1];
+            daspect(vec1);
+            set(h_axes.main, 'DataAspectRatio', vec1);
+            %disp(['daspect ',num2str(dz),' 1 1']);
+        end
+        
+        try
+            caxis(h_axes.main, limits);
+        catch
+            % Catch if limits are invalid
+            %disp('Invalid limit. Ignoring')
+        end
+        
+        set(h_axes.main, 'XTickMode','auto');
+        set(h_axes.main, 'YTickMode','auto');
+        set(h_axes.main, 'XTickLabelMode','auto');
+        set(h_axes.main, 'YTickLabelMode','auto');
+        delete(findall(h_axes.main,'Tag','text1'))
+        if (isfield(orig_data,'combined_plot') && orig_data.combined_plot>0 && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active'))) %% Added combined plot tick control RB 2018/12/17
+            cur_axis=get(h_axes.main);
+            
+            %convert labels for multi-view setup
+            ii=1; start_subimage=orig_data.xspacing(1,ii); end_subimage=orig_data.xspacing(2,1); 
+            for i=1:length(cur_axis.XTick)
+                cur_pos=(cur_axis.XTick(i)/options.x_axis_sf-options.global_x_lim(1))/(options.global_x_lim(2)-options.global_x_lim(1));
+                while (cur_pos > end_subimage)
+                    ii=ii+1;
+                    start_subimage=orig_data.xspacing(1,ii);
+                    end_subimage=orig_data.xspacing(2,ii);
+                end
+                if (cur_pos < start_subimage)
+                    cur_val(i)=NaN;
+                else
+                    cur_val(i)=round(10*(((cur_pos - start_subimage) / (end_subimage - start_subimage) * (options.global_x_lim(2)-options.global_x_lim(1))+options.global_x_lim(1)) * options.x_axis_sf))/10.0;
+                end
+            end
+            iNaN=find(isnan(cur_val));
+            XTickLabel1=num2cell(cur_val.');
+            if (length(iNaN)>0)
+                try
+                    XTickLabel1{iNaN}='';
+                catch
+                
+                end
+            end
+            set(h_axes.main, 'XTickLabel',XTickLabel1);
+            set(h_axes.main, 'XTickMode','manual');
+            cur_axis=get(h_axes.main);
+            ii=1; start_subimage=orig_data.zspacing(1,ii); end_subimage=orig_data.zspacing(2,1); 
+            for i=1:length(cur_axis.YTick)
+                cur_pos=(cur_axis.YTick(i)/options.z_axis_sf-options.global_z_lim(1))/(options.global_z_lim(2)-options.global_z_lim(1));
+                while (cur_pos > end_subimage)
+                    ii=ii+1;
+                    start_subimage=orig_data.zspacing(1,ii);
+                    end_subimage=orig_data.zspacing(2,ii);
+                end
+                if (cur_pos < start_subimage)
+                    cur_val(i)=NaN;
+                else
+                    cur_val(i)=round(10*(((cur_pos - start_subimage) / (end_subimage - start_subimage) * (options.global_z_lim(2)-options.global_z_lim(1))+options.global_z_lim(1)) * options.z_axis_sf))/10.0;
+                end
+            end
+            iNaN=find(isnan(cur_val));
+            XTickLabel1=num2cell(cur_val.');
+            if (length(iNaN)>0)
+                try
+                    XTickLabel1{iNaN}='';
+                catch
+                
+                end
+            end
+            set(h_axes.main, 'YTickLabel',XTickLabel1);
+            set(h_axes.main, 'YTickMode','manual')
+        end
+        
+        if (isfield(options,'viewnames_active') && options.viewnames_active>0 && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active')))
+            ii=0; %orig_data.views_start;
+            for i=1:size(orig_data.zspacing,2)
+                cur_z = ((0.05 * (orig_data.zspacing(2,i) - orig_data.zspacing(1,i))+orig_data.zspacing(1,i))* (options.global_z_lim(2)-options.global_z_lim(1))+options.global_z_lim(1)) * options.z_axis_sf; % 5% into image from top
+                for j=1:size(orig_data.xspacing,2)
+                    ii=ii+1;
+                    if (ii> length(orig_data.view_names))
+                        continue;
+                    end
+                    cur_x = ((0.05 * (orig_data.xspacing(2,j) - orig_data.xspacing(1,j))+orig_data.xspacing(1,j))* (options.global_x_lim(2)-options.global_x_lim(1))+options.global_x_lim(1)) * options.x_axis_sf; % 5% into image from left
+                    text(h_axes.main,cur_x,cur_z,orig_data.view_names{ii},'Color','red','BackgroundColor','w','VerticalAlignment','top','FontSize',12,'Tag','text1');
+                end
+            end
+        end
+        
         if strcmp(options.plotwhat, 'arg')
             a = linspace(0, 2 * pi, 100)';
             if options.monochrome
@@ -842,14 +1113,17 @@ h_pan = pan;
             end
         end
         f = ancestor(h_plot_objects.image, 'figure');
-        set(f, 'colormap', cmap);
-        
+        if isfield(options,'pvalues_active') && options.pvalues_active>0
+            set(f, 'colormap', flipud(cmap));
+        else
+            set(f, 'colormap', cmap);
+        end
         fn_update_cursor;
         axis(h_axes.main, 'ij');
         set(h_axes.main, 'ButtonDownFcn', @cb_button_down_main);
         %plot geometric features, such as array
         delete(findall(h_axes.main,'Tag','geom'))
-        if isfield(orig_data, 'geom')
+        if isfield(orig_data, 'geom') && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active'))
             if isfield(orig_data.geom, 'array')
                 line(orig_data.geom.array.x * options.x_axis_sf, orig_data.geom.array.z * options.z_axis_sf, ...
                     'Color', config.array_el_edge_color, ...
@@ -858,33 +1132,50 @@ h_pan = pan;
             end
             if isfield(orig_data.geom, 'lines')
                 for ii = 1:length(orig_data.geom.lines)
-                    line(orig_data.geom.lines(ii).x * options.x_axis_sf, orig_data.geom.lines(ii).z * options.z_axis_sf, ...
-                        'LineStyle', orig_data.geom.lines(ii).style, ...
-                        'Color', 'w', ...
-                        'Parent', h_axes.main, ...
-                        'Tag', 'geom');
+                    if (isfield(orig_data.geom.lines(ii),'color')) %% Added color option
+                        line(orig_data.geom.lines(ii).x * options.x_axis_sf, orig_data.geom.lines(ii).z * options.z_axis_sf, ...
+                            'LineStyle', orig_data.geom.lines(ii).style, ...
+                            'Color', orig_data.geom.lines(ii).color, ...
+                            'Parent', h_axes.main, ...
+                            'Tag', 'geom');
+
+                    else
+                        line(orig_data.geom.lines(ii).x * options.x_axis_sf, orig_data.geom.lines(ii).z * options.z_axis_sf, ...
+                            'LineStyle', orig_data.geom.lines(ii).style, ...
+                            'Color', 'w', ...
+                            'Parent', h_axes.main, ...
+                            'Tag', 'geom');
+                    end
                 end
             end
         end
-        % Update south graph
-        if size(options.select, 1)
-            ii = [1:length(plot_data.z)];
-            jj = interp1(plot_data.z, ii, options.select(1,2), 'nearest', 'extrap');
-            tmp = plot_data.f(jj, :);
-            [plot_val, limits, options.scale_mode] = fn_convert_to_plot_val(tmp, options.plotwhat, options.scale_mode, options.db_range, options.max_val, options.norm_val);
-            plot(h_axes.south, plot_data.x * options.x_axis_sf, plot_val, 'r');
-            ylim(h_axes.south, limits);
-        end;
         
-        % Update west graph
-        if size(options.select, 1)
-            ii = [1:length(plot_data.x)];
-            jj = interp1(plot_data.x, ii, options.select(1,1), 'nearest', 'extrap');
-            tmp = plot_data.f(:, jj);
-            [plot_val, limits, options.scale_mode] = fn_convert_to_plot_val(tmp, options.plotwhat, options.scale_mode, options.db_range, options.max_val, options.norm_val);
-            plot(h_axes.west, plot_val, plot_data.z * options.z_axis_sf, 'r');
-            xlim(h_axes.west, limits);
-        end;
+        if (isfield(options,'select') && ~isempty(options.select))
+            if (isfield(orig_data,'combined_plot') && orig_data.combined_plot>0 && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active'))) %% Added combined plot tick control RB 2018/12/17
+                % Update south graph
+                % Update west graph
+            else
+                % Update south graph
+                if size(options.select, 1)
+                    ii = [1:length(plot_data.z)];
+                    jj = interp1(plot_data.z, ii, options.select(1,2), 'nearest', 'extrap');
+                    tmp = plot_data.f(jj, :);
+                    [plot_val, limits, options.scale_mode] = fn_convert_to_plot_val(tmp, options.plotwhat, options.scale_mode, options.db_range, options.max_val, options.norm_val);
+                    plot(h_axes.south, plot_data.x * options.x_axis_sf, plot_val, 'r');
+                    ylim(h_axes.south, limits);
+                end;
+                
+                % Update west graph
+                if size(options.select, 1)
+                    ii = [1:length(plot_data.x)];
+                    jj = interp1(plot_data.x, ii, options.select(1,1), 'nearest', 'extrap');
+                    tmp = plot_data.f(:, jj);
+                    [plot_val, limits, options.scale_mode] = fn_convert_to_plot_val(tmp, options.plotwhat, options.scale_mode, options.db_range, options.max_val, options.norm_val);
+                    plot(h_axes.west, plot_val, plot_data.z * options.z_axis_sf, 'r');
+                    xlim(h_axes.west, limits);
+                end;
+            end
+        end
         
         data_has_been_plotted = 1;
         
@@ -958,20 +1249,143 @@ h_pan = pan;
     
     function fn_update_cursor
         c = axis(h_axes.main);
+        if (~isfield(options,'select') || isempty(options.select))
+            return;
+        end
         if fn_get_control_status(h_toolbar, 'cursor.point')
             set(h_plot_objects.region, 'visible', 'off');
-            if size(options.select, 1)
-                set(h_plot_objects.x_crosshair, 'XData', [c(1), c(2)], 'YData', ones(1,2) * options.select(1,2) * options.z_axis_sf, 'Visible', 'On');
-                set(h_plot_objects.z_crosshair, 'XData', ones(1,2) * options.select(1,1) * options.x_axis_sf, 'YData', [c(3), c(4)] , 'Visible', 'On');
-                switch options.scale_mode
-                    case 'linear'
-                        val_str = sprintf('%.3f %%', abs(fn_get_value_at_point(plot_data, options.select)) / options.norm_val * 100);
-                    case 'log'
-                        val_str = sprintf('%.1f dB', 20*log10(abs(fn_get_value_at_point(plot_data, options.select)) / options.norm_val));
+            if (isfield(orig_data,'combined_plot') && orig_data.combined_plot > 0 && (isfield(options,'pvalues_active') && options.pvalues_active<2  || ~isfield(options,'pvalues_active')))
+                if size(options.select, 1)
+                    zLoc=(options.select(1,2)-options.global_z_lim(1)) / (options.global_z_lim(2)-options.global_z_lim(1));
+                    xLoc=(options.select(1,1)-options.global_x_lim(1))/ (options.global_x_lim(2)-options.global_x_lim(1));
+                    %Convert to actual xLoc and zLoc for combined plot
+                    ii=1; start_subimage=orig_data.xspacing(1,ii); end_subimage=orig_data.xspacing(2,ii);
+                    while (xLoc > end_subimage)
+                        ii=ii+1;
+                        if (ii > size(orig_data.xspacing,2))
+                            return
+                        end
+                        start_subimage=orig_data.xspacing(1,ii);
+                        end_subimage=orig_data.xspacing(2,ii);
+                    end
+                    if (xLoc < start_subimage)
+                        xLoc=NaN;
+                        xLoc2=NaN;
+                    else
+                        xLoc = (xLoc - start_subimage);
+                        xLoc2= (xLoc / (end_subimage - start_subimage)* (options.global_x_lim(2)-options.global_x_lim(1)) + options.global_x_lim(1))* options.x_axis_sf;
+                    end
+                    ii=1; start_subimage=orig_data.zspacing(1,ii); end_subimage=orig_data.zspacing(2,ii);
+                    while (zLoc > end_subimage)
+                        ii=ii+1;
+                        if (ii > size(orig_data.zspacing,2))
+                            return
+                        end
+                        start_subimage=orig_data.zspacing(1,ii);
+                        end_subimage=orig_data.zspacing(2,ii);
+                    end
+                    if (zLoc < start_subimage)
+                        zLoc=NaN;
+                        zLoc2=NaN;
+                    else
+                        zLoc=(zLoc - start_subimage) ;
+                        zLoc2= (zLoc/ (end_subimage - start_subimage)* (options.global_z_lim(2)-options.global_z_lim(1)) + options.global_z_lim(1)) * options.z_axis_sf;
+                    end
+                    % Need to build cross-hair plot lines which cover all sub images
+                    % Z-crosshair line
+                    lx=c(2)-c(1); a=[c(1)-0.05*lx, c(2)+0.05*lx]; x_path=[]; b=[a(2) a(1)];z_path=[];
+                    lz=c(4)-c(3); az=[c(3)-0.05*lz, c(4)+0.05*lz];  bz=[az(2) az(1)];
+                    for i=1:size(orig_data.zspacing,2)
+                        if (mod(i,2)>0)
+                            x_path=[x_path a];
+                        else
+                            x_path=[x_path b];
+                        end
+                        a1=(options.global_z_lim(1)+(orig_data.zspacing(1,i)+zLoc)* (options.global_z_lim(2)-options.global_z_lim(1))) * options.z_axis_sf;
+                        z_path=[z_path a1*ones(1,2)];
+                    end
+                    set(h_plot_objects.z_crosshair, 'XData', x_path, 'YData', z_path , 'Visible', 'On');
+                    % X-crosshair line
+                    z_path=[]; x_path=[];
+                    for i=1:size(orig_data.xspacing,2)
+                        if (mod(i,2)>0)
+                            z_path=[z_path az];
+                        else
+                            z_path=[z_path bz];
+                        end
+                        a1=(options.global_x_lim(1)+(orig_data.xspacing(1,i)+xLoc)* (options.global_x_lim(2)-options.global_x_lim(1))) * options.x_axis_sf;
+                        x_path=[x_path a1*ones(1,2)];
+                    end
+                    set(h_plot_objects.x_crosshair, 'XData', x_path, 'YData', z_path , 'Visible', 'On');
+                    s1(1,1)=xLoc2/options.x_axis_sf;
+                    s1(1,2)=zLoc2/options.z_axis_sf;
+                    options.combined_select_index=s1;
+                    vals1=fn_get_value_at_point_combined(orig_data, s1);
+                    vals2=vals1(~isnan(vals1));
+                    h=figure(100); clf;
+                    h.Name='Extracted Data';
+                    h.NumberTitle='off';
+                    switch options.scale_mode
+                        case 'linear'
+                            max_val=max(abs(vals2) / options.norm_val * 100);
+                            bar(abs(vals1) / options.norm_val * 100);
+                            val_str = sprintf('%.3f %% ', abs(vals2) / options.norm_val * 100);
+                            ylabel('Amplitude %%');
+                        case 'log'
+                            max_val=max(20*log10(abs(vals2) / options.norm_val));
+                            bar_vals=20*log10(abs(vals1) / options.norm_val);
+                            if (isfield(options,'levelling_active') && options.levelling_active>0 && isfield(orig_data,'mask'))
+                                max_val=max(max_val+0.5,13);
+                                bar(bar_vals);
+                                hold on
+                                plot([0.5 length(vals1)+0.5],[12 12],'--r');
+                                axis([0.5 length(vals1)+0.5 min(20*log10(abs(vals2) / options.norm_val))-0.5 max_val]);
+                                ylabel('Amplitude Relative to RMS (dB)');
+                            else
+                                if (isfield(orig_data,'rms')) 
+                                    L={'TFM Intensity','Noise RMS'};
+                                    rms_diff=20*log10(orig_data.rms / options.norm_val).';
+                                    bar_vals=[bar_vals rms_diff];
+                                    h=bar(bar_vals);
+                                    legend(h,L,'Location','southoutside','Orientation','horizontal');
+                                    legend('boxoff')
+                                else
+                                    bar(bar_vals);
+                                end
+                                ylabel('Amplitude (dB)');
+                            end
+                            val_str = sprintf('%.1f dB ', 20*log10(abs(vals2) / options.norm_val));
+                            
+                    end;
+                    xlabel('View');
+                    set(gca,'xtick',1:length(orig_data.view_names));
+                    set(gca,'xticklabel',orig_data.view_names)
+                    
+                    pos_str = sprintf('(%.2f, %.2f)', s1(1,1) * options.x_axis_sf, s1(1,2) * options.z_axis_sf);
+                    title(['[X,Z] = ',pos_str]);
+                    %pointer_str = {pos_str, val_str};
+                    pointer_str = {pos_str};
                 end;
-                pos_str = sprintf('(%.2f, %.2f)', options.select(1,1) * options.x_axis_sf, options.select(1,2) * options.z_axis_sf);
-                pointer_str = {pos_str, val_str};
-            end;
+            else
+                if size(options.select, 1)
+                    set(h_plot_objects.x_crosshair, 'XData', [c(1), c(2)], 'YData', ones(1,2) * options.select(1,2) * options.z_axis_sf, 'Visible', 'On');
+                    set(h_plot_objects.z_crosshair, 'XData', ones(1,2) * options.select(1,1) * options.x_axis_sf, 'YData', [c(3), c(4)] , 'Visible', 'On');
+                    switch options.scale_mode
+                        case 'linear'
+                            val_str = sprintf('%.3f %%', abs(fn_get_value_at_point(plot_data, options.select)) / options.norm_val * 100);
+                        case 'log'
+                            val_str = sprintf('%.1f dB', 20*log10(abs(fn_get_value_at_point(plot_data, options.select)) / options.norm_val));
+                    end;
+                    pos_str = sprintf('(%.2f, %.2f)', options.select(1,1) * options.x_axis_sf, options.select(1,2) * options.z_axis_sf);
+                    pointer_str = {pos_str, val_str};
+                end;
+            end
+        else
+            try
+                close(100);
+            catch
+            
+            end
         end;
         if fn_get_control_status(h_toolbar, 'cursor.region')
             if size(options.select, 1) == 0
@@ -1004,6 +1418,10 @@ h_pan = pan;
             end;
         end;
         if ~fn_get_control_status(h_toolbar, 'cursor.point') & ~fn_get_control_status(h_toolbar, 'cursor.region')
+            %Remove selected point, if it exists
+            if isfield(options,'select')
+                options=rmfield(options,'select');
+            end
             set(h_plot_objects.x_crosshair, 'visible', 'off');
             set(h_plot_objects.z_crosshair, 'visible', 'off');
             set(h_plot_objects.region, 'visible', 'off');
@@ -1036,6 +1454,8 @@ switch plotwhat
         plot_val = angle(val) * 180 / pi;
         limits = [-180, 180];
         norm_val = 1;
+    otherwise
+        % do nothing
 end;
 switch scale_mode
     case 'log'
@@ -1101,10 +1521,49 @@ function val = fn_get_value_at_point(data, pt)
 i1 = interp1(data.x, [1:length(data.x)], pt(1), 'nearest');
 i2 = interp1(data.z, [1:length(data.z)], pt(2), 'nearest');
 if i1 >= 1 & i1 <= size(data.f, 2) & i2 >= 1 & i2 <= size(data.f, 1)
-    val = data.f(i2, i1);
+    if (isfield(data,'pvalues_active') && data.pvalues_active>1)
+        val= data.f2(i2, i1);
+    else
+        val = data.f(i2, i1);
+    end
 else
     val = 0;
 end
+end
+
+function val = fn_get_value_at_point_combined(data, pt)
+i1 = interp1(data.x, [1:length(data.x)], pt(1), 'nearest');
+i2 = interp1(data.z, [1:length(data.z)], pt(2), 'nearest');
+if (i1 < 1 || i1 > length(data.x) || isnan(i1) || i2 < 1 || i2 > length(data.z) || isnan(i2))
+    val = 0;
+    return;
+end
+if (isfield(data,'combined_plot') && data.combined_plot > 0 && (isfield(data,'pvalues_active') && data.pvalues_active<2  || ~isfield(data,'pvalues_active')))
+    val=zeros(length(data.view_names),1);
+    zs=round(data.zspacing*data.zfull);
+    xs=round(data.xspacing*data.xfull);
+    ii=0;
+    for j=1:size(data.zspacing,2)
+        jc=zs(1,j)+i2;
+        for i=1:size(data.xspacing,2)
+            ii=ii+1;
+            if (ii>length(data.view_names))
+                return;
+            end
+            ic=xs(1,i)+i1;
+            val(ii)=data.f(jc, ic);
+        end
+    end   
+else
+    %if i1 >= 1 & i1 <= size(data.f, 2) & i2 >= 1 & i2 <= size(data.f, 1)
+    if (isfield(options,'pvalues_active') && data.pvalues_active>1)
+        val= data.f2(i2, i1);
+    else
+        val = data.f(i2, i1);
+    end
+    %end
+end
+
 end
 
 function val = fn_get_rms_in_region(data, reg)
