@@ -1031,7 +1031,8 @@ end
 
 function fname = fn_save_file(exp_data, setup, folder)
 filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.ndt'; filter{2,2} = 'Setup file (*.ndt)';
+filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file (*.mfmc)';
+filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
 [fname, pathname, filterindex] = uiputfile(filter, 'Save', [folder, filesep]);
 if ~ischar(fname)
     %nothing selected
@@ -1039,18 +1040,62 @@ if ~ischar(fname)
     return;
 end
 switch filterindex
-    case 1
+    case 1 %UoB Matlab format
         %prevent save without array or material data
         if ~isfield(exp_data, 'array')
             warndlg('Select array first','Warning')
             return;
-        end;
+        end
         if ~isfield(exp_data, 'ph_velocity')
             warndlg('Select material first','Warning')
             return;
-        end;
+        end
         save([pathname, fname], 'exp_data');
-    case 2
+    case 2 %MFMC hdf5 format
+        %if file exists there is option to add to existing sequence or
+        %create new one
+        new_seq = 1;
+        if exist(fullfile(pathname, fname), 'file') == 2
+            %find datasets in existing file and ask user to select one to
+            %add to or create new one
+            MFMC = fn_MFMC_open_file(fullfile(pathname, fname), [], 1); %opens file only, does not create sequence ye
+            [PROBE, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC); %returns sequences in file
+            seq = {};
+            seq{1} = 'New sequence';
+            for ii = 1:length(SEQUENCE)
+                seq{ii + 1} = SEQUENCE{ii}.location;
+            end
+            
+            [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
+            if indx ~= 1
+                %this is case of adding frame to existing sequence in
+                %existing file
+                new_seq = 0;
+                SEQUENCE = SEQUENCE{indx - 1};
+            end
+        end
+        
+        %open/create file and add new sequence if necessary
+        if new_seq
+            MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
+
+            %need to create SEQUENCE and PROBE
+            PROBE = fn_MFMC_helper_brain_array_to_probe(exp_data.array);
+            PROBE = fn_MFMC_helper_add_probe_if_new(MFMC, PROBE);
+            SEQUENCE = fn_MFMC_helper_brain_exp_data_to_sequence(exp_data, PROBE);
+            
+            %ask user for name of dataset to create
+            seq = inputdlg('Sequence (leave blank for default)', 'MFMC sequence', [1, 30]);
+            if ~isempty(seq{1})
+                SEQUENCE.name = seq{1};
+            end
+            SEQUENCE = fn_MFMC_add_sequence(MFMC, SEQUENCE);
+        end
+        
+        %add frame to sequence
+        SEQUENCE = fn_MFMC_helper_brain_exp_data_to_frame(exp_data, MFMC, SEQUENCE);
+        
+    case 3
         save([pathname, fname], 'setup');
 end
 fname =fullfile(pathname, fname);
@@ -1059,9 +1104,10 @@ end
 function [exp_data, setup, exp_data_fname] = fn_load_file(folder, array_folder)
 exp_data_fname = [];%only set if exp_data file is loaded
 filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.ndt'; filter{2,2} = 'Setup file (*.ndt)';
-filter{3,1} = '*.png'; filter{3,2} = 'Diagnostic sonar file (*.png)';
-filter{4,1} = '*.txt'; filter{4,2} = 'M2M CIVA file (*.txt)';
+filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file(*.mfmc)';
+filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
+filter{4,1} = '*.png'; filter{4,2} = 'Diagnostic sonar file (*.png)';
+filter{5,1} = '*.txt'; filter{5,2} = 'M2M CIVA file (*.txt)';
 
 [fname, pathname, filterindex] = uigetfile(filter, 'Load', folder);
 
@@ -1074,9 +1120,34 @@ if ~ischar(fname)
 end
 
 if strcmp(fname(end-2:end),'png')==1
-    exp_data=fn_ds_convert([pathname, fname(1:end-4)]);
+    exp_data = fn_ds_convert([pathname, fname(1:end-4)]);
 elseif strcmp(fname(end-2:end),'txt')==1
-    exp_data=fn_m2m_convert([pathname, fname(1:end-4)]);
+    exp_data = fn_m2m_convert([pathname, fname(1:end-4)]);
+elseif strcmp(fname(end-3:end),'mfmc')==1
+    MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
+    [~, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC);
+    frame_ind = [];
+    seq_loc = [];
+    if length(SEQUENCE) > 1 %select which sequence in file to use
+        seq = {};
+        for ii = 1:length(SEQUENCE)
+            seq{ii} = SEQUENCE{ii}.location;
+        end
+        [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
+        seq_loc = SEQUENCE{indx}.location;
+        no_frames = fn_MFMC_get_no_frames(MFMC, seq_loc);
+        if no_frames > 1
+            answer = inputdlg(sprintf('Frame (1 to %i):', no_frames), 'MFMC');
+            if isnumeric(answer{1})
+                frame_ind = round(str2num(answer));
+                frame_ind = max(frame_ind, 1);
+                frame_ind = min(frame_ind, no_frames);
+            else
+                frame_ind = no_frames;
+            end
+        end
+    end
+    exp_data = fn_MFMC_helper_frame_to_brain_exp_data(MFMC, seq_loc, frame_ind);
 else
     load([pathname, fname], '-mat');
      
