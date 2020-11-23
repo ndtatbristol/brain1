@@ -135,8 +135,8 @@ h_data_changed();
         cla;
         pcolor(s.phi * 180 / pi, s.phi * 180 / pi, abs(s.m));
         shading flat;
-%         c = caxis;
-%         caxis([0, c(2)]);
+        %         c = caxis;
+        %         caxis([0, c(2)]);
         axis equal;
         axis tight;
         axis xy;
@@ -175,7 +175,19 @@ h_data_changed();
                     dphi = abs(s.phi(i2) - s.phi(i1));
                 end
             end
-            wavelength = exp_data.ph_velocity / params.centre_freq;
+            
+            %determine correct veloicty to use
+            if isfield(exp_data, 'vel_elipse') %for legacy files, the spherical harmonic coeffs are not defined for ellipse at this point, so need to read default values from legacy info
+                c = exp_data.ph_velocity;
+            elseif (isfield(exp_data, 'material') && isfield(exp_data.material, 'vel_spherical_harmonic_coeffs'))
+                [c, ~, ~, ~] = fn_get_nominal_velocity(exp_data.material.vel_spherical_harmonic_coeffs);
+            elseif isfield(exp_data, 'ph_velocity')
+                c = exp_data.ph_velocity;
+            else
+                error('No valid velocity description found');
+            end
+            
+            wavelength = c / params.centre_freq;
             crack_length = fn_crack_length_from_hwhm(dphi) * wavelength;
             str2 = {...
                 sprintf('Angle: %i degrees', round(s.phi(i2) * 180 / pi)), ...
@@ -196,7 +208,7 @@ end
 function s = fn_2d_s_matrix_orig_method(exp_data, options)
 mesh.x = options.x;
 mesh.z = options.z;
-TFM_focal_law = fn_calc_tfm_focal_law2(exp_data, mesh);
+TFM_focal_law = fn_calc_tfm_focal_law3(exp_data, mesh);
 TFM_focal_law.interpolation_method = 'linear';
 TFM_focal_law.filter_on = 1;
 TFM_focal_law.filter = fn_calc_filter(exp_data.time, options.centre_freq, options.centre_freq * options.fract_bandwidth / 2);
@@ -204,6 +216,17 @@ TFM_focal_law.lookup_time_tx = TFM_focal_law.lookup_time;
 TFM_focal_law.lookup_time_rx = TFM_focal_law.lookup_time;
 TFM_focal_law.lookup_ind_tx = TFM_focal_law.lookup_ind;
 TFM_focal_law.lookup_ind_rx = TFM_focal_law.lookup_ind;
+
+%determine correct veloicty to use
+if isfield(exp_data, 'vel_elipse') %for legacy files, the spherical harmonic coeffs are not defined for ellipse at this point, so need to read default values from legacy info
+    c = exp_data.ph_velocity;
+elseif (isfield(exp_data, 'material') && isfield(exp_data.material, 'vel_spherical_harmonic_coeffs'))
+    [c, ~, ~, ~] = fn_get_nominal_velocity(exp_data.material.vel_spherical_harmonic_coeffs);
+elseif isfield(exp_data, 'ph_velocity')
+    c = exp_data.ph_velocity;
+else
+    error('No valid velocity description found');
+end
 
 lookup_amp = ones(size(TFM_focal_law.lookup_amp)); %store this for later (should be corrected for directivity at this point
 TFM_focal_law = rmfield(TFM_focal_law, {'lookup_amp', 'lookup_ind', 'lookup_time'});
@@ -227,7 +250,7 @@ d2 = d1(exp_data.tx) + d1(exp_data.rx);
 
 vals = zeros(size(d2));
 for ii = 1:length(vals)
-    vals(ii) = interp1(exp_data.time * exp_data.ph_velocity, exp_data.time_data(:, ii), d2(ii), 'linear', 0);
+    vals(ii) = interp1(exp_data.time * c, exp_data.time_data(:, ii), d2(ii), 'linear', 0);
 end
 
 if options.correct_for_propagation_dist
@@ -240,7 +263,7 @@ if options.correct_for_el_directivity
     vals = vals ./ cos(theta(exp_data.tx)) ./ cos(theta(exp_data.rx));
     %and the element width effect
     a = options.el_width;
-    lambda = exp_data.ph_velocity / options.centre_freq;
+    lambda = c / options.centre_freq;
     vals = vals ./ sinc(a * sin(theta(exp_data.tx)) / lambda) ./ sinc(a * sin(theta(exp_data.rx)) / lambda);
 end
 

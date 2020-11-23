@@ -45,6 +45,7 @@ default_min_std_over_mean = 0.8;
 default_max_fract_vel_shift = 0.1;
 default_poly_order = 4;
 default_force_even_poly = 1;
+default_fit_type = 'Ellipse';
 default_name = 'New material';
 
 material.name = sprintf([default_name, ' (%i)'], round(exp_data.ph_velocity));
@@ -69,7 +70,7 @@ f = figure('Position',[(p(3) - width) / 2, (p(4) - height) / 2, width, height] ,
     'NumberTitle', 'off', ...
     'ToolBar', 'None', ...
     'Name', ['Analysis:', 'Attenuation estimation'] ...
-);
+    );
 
 %create graph panel
 h_graph_panel = uipanel(f, 'Units', 'Normalized', 'Position', graph_pos);
@@ -107,6 +108,11 @@ content_info.poly_order.default = default_poly_order;
 content_info.poly_order.type = 'int';
 content_info.poly_order.constraint = [2, 6];
 
+content_info.fit_type.label = 'Fit type';
+content_info.fit_type.default = default_fit_type;
+content_info.fit_type.type = 'constrained';
+content_info.fit_type.constraint = {'Ellipse', 'Poly'};
+
 content_info.force_even_poly.label = 'Force even poly';
 content_info.force_even_poly.type = 'bool';
 content_info.force_even_poly.constraint = {'Yes', 'No'};
@@ -122,15 +128,21 @@ h_data_changed();
 
     function fn_new_params(params)
         %the actual calculation
-        [ph_velocity, vel_poly, time_data2, theta, arrival_time, dist] = fn_calc_vel_poly(exp_data, params.thickness, z_min, z_max, params.max_fract_vel_shift, params.min_std_over_mean, params.poly_order, params.force_even_poly);
-
-        %update material details and name
-        material.ph_velocity = ph_velocity;
-        material.vel_poly = vel_poly;
-        material.name = sprintf([default_name, ' (%i var)'], round(exp_data.ph_velocity));
-%         fname = fullfile(start_in_folder, config.files.local_brain_path, config.files.materials_path, material.name);
+        [ph_velocity, vel_poly, time_data2, theta, arrival_time, dist, vel_elipse] = fn_calc_vel_poly(exp_data, params.thickness, z_min, z_max, params.max_fract_vel_shift, params.min_std_over_mean, params.poly_order, params.force_even_poly);
         
-        %display results
+        material.ph_velocity = ph_velocity;
+        if strcmp(params.fit_type,'Poly')==1
+            %update material details and name
+            material.vel_poly = vel_poly;
+            material.name = sprintf([default_name, ' (%i var)'], round(exp_data.ph_velocity));
+            %         fname = fullfile(start_in_folder, config.files.local_brain_path, config.files.materials_path, material.name);
+        else
+            material.vel_elipse = vel_elipse;
+            material.name = sprintf([default_name, ' (%i var_el)'], round(exp_data.ph_velocity));
+            %         fname = fullfile(start_in_folder, config.files.local_brain_path, config.files.materials_path, material.name);
+            %display results
+        end
+        
         subplot(1,2,1);
         cla;
         imagesc(theta * 180 / pi, exp_data.time * 1e6, log(abs(time_data2)));
@@ -140,18 +152,22 @@ h_data_changed();
         xlabel('Angle (^o)');
         ylabel('Time (us)');
         zoom on;
-
+        
         subplot(1,2,2);
         cla;
         arrival_time(find(arrival_time == 0)) = NaN;
         plot(theta * 180 / pi, dist ./ arrival_time, 'k.');
-        vel = polyval(vel_poly.p, theta, [], vel_poly.mu);
+        if strcmp(params.fit_type,'Poly')==1;
+            vel = polyval(vel_poly.p, theta, [], vel_poly.mu);
+        else
+            vel = sqrt((vel_elipse(1).^2*vel_elipse(2).^2)./(vel_elipse(2).^2.*cos(abs(theta)).^2+vel_elipse(1).^2.*sin(abs(theta)).^2));
+        end
         hold on;
         plot(theta * 180 / pi, vel, 'r');
         xlabel('Angle (^o)');
         ylabel('Velocity (m/s)');
         zoom on;
-
+        
         set(h_update_button, 'Enable', 'On');
     end
 
@@ -167,7 +183,7 @@ h_data_changed();
     end
 end
 
-function [ph_velocity, vel_poly, data2, theta, arrival_time, dist] = fn_calc_vel_poly(exp_data, thickness, z_min, z_max, max_fract_vel_shift, min_std_over_mean, poly_order, force_even_poly)
+function [ph_velocity, vel_poly, data2, theta, arrival_time, dist, vel_elipse] = fn_calc_vel_poly(exp_data, thickness, z_min, z_max, max_fract_vel_shift, min_std_over_mean, poly_order, force_even_poly)
 %first work out tx rx sep for each time trace
 dx = abs(exp_data.array.el_xc(exp_data.tx) - exp_data.array.el_xc(exp_data.rx));
 dxu = unique(dx);
@@ -211,4 +227,5 @@ end
 ph_velocity = vel(1);
 ii = find(vel2 > 0);
 [vel_poly.p, dummy, vel_poly.mu] = polyfit(theta2(ii), vel2(ii), poly_order);
+[vel_elipse(1),vel_elipse(2)]=fn_fit_ellipse(theta2(ii),vel2(ii));
 end

@@ -112,10 +112,11 @@ big_inv_s = [];
         exp_data.time = time_axis;
     end
 
-    function fn_send_options(options, no_channels)
+    function fn_send_options(options, array, material)
         if ~connected
             return;
         end
+        no_channels = length(array.el_xc(:));
         switch options.acquire_mode
             case 'SAFT'
                 [options.tx_ch, options.rx_ch] = fn_set_fmc_input_matrices(no_channels, 0);

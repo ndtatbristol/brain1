@@ -19,8 +19,10 @@ default_z_max = max(display_options.select(:,2));
 
 if isfield(process_options, 'angle_limit_on') && process_options.angle_limit_on
     dx = default_z_max * tan(process_options.angle_limit);
-    default_x_min = default_x_min + dx;
-    default_x_max = default_x_max - dx;
+    if ((default_x_max-default_x_min).*0.5) >dx
+        default_x_min = default_x_min + dx;
+        default_x_max = default_x_max - dx;
+    end
 end
 
 %figure size

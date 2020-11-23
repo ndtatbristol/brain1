@@ -59,7 +59,7 @@ end
 %calc focal law -  different if data is CSM!
 data_is_csm = length(unique(exp_data.tx)) == 1;
 if options.angle_limit_on
-    calc_focal_law_options.angle_limit = options.angle_limit;
+    calc_focal_law_options.angle_limit = [options.angle_limit, options.look_angle];
 else
     calc_focal_law_options = [];
 end
@@ -89,7 +89,23 @@ if data_is_csm
     end
 else
     calc_focal_law_options.interpolation_method = lower(options.interpolation_method);
-    options_with_precalcs.focal_law = fn_calc_tfm_focal_law2(exp_data, tmp_mesh, calc_focal_law_options);
+    calc_focal_law_options.window=options.angle_limit_window;
+    options_with_precalcs.focal_law = fn_calc_tfm_focal_law3(exp_data, tmp_mesh, calc_focal_law_options);
+    
+    if strcmp(class(options_with_precalcs.focal_law.lookup_amp), 'gpuArray')
+        options_with_precalcs.sensitivity=gpuArray(zeros(size(options_with_precalcs.focal_law.lookup_amp,1),size(options_with_precalcs.focal_law.lookup_amp,2)));
+    else
+        options_with_precalcs.sensitivity=zeros(size(options_with_precalcs.focal_law.lookup_amp,1),size(options_with_precalcs.focal_law.lookup_amp,2));
+    end
+    
+    output=fn_transducer_pairs(length(exp_data.array.el_xc),1);
+    if length(exp_data.tx)~=length(output)
+        output=fn_transducer_pairs(length(exp_data.array.el_xc),1,1);
+    end
+    for ii=1:length(output)
+       options_with_precalcs.sensitivity=options_with_precalcs.sensitivity+options_with_precalcs.focal_law.lookup_amp(:,:,output(ii,1))+options_with_precalcs.focal_law.lookup_amp(:,:,output(ii,2));
+    end
+    
     %effect of attenuation correction
     if options_with_precalcs.atten_correction_on
         alpha = -log(10 ^ (-options_with_precalcs.atten / 20));
@@ -114,9 +130,9 @@ options_with_precalcs.focal_law.interpolation_method = lower(options.interpolati
 options_with_precalcs.focal_law.filter_on = options.filter_on;
 options_with_precalcs.focal_law.filter = fn_calc_filter(exp_data.time, options.centre_freq, options.centre_freq * options.frac_half_bandwidth / 2);
 if options.angle_limit_on
-    options_with_precalcs.focal_law.angle_limit = options.angle_limit;
+    options_with_precalcs.focal_law.angle_limit = [options.angle_limit, options.look_angle];
     options_with_precalcs.focal_law.amp_on = 1;
-    dx = max(options_with_precalcs.data.z) * tan(options_with_precalcs.focal_law.angle_limit);
+    dx = max(options_with_precalcs.data.z) * tan(options_with_precalcs.focal_law.angle_limit(2));
     options_with_precalcs.geom.lines(1).x = [min(exp_data.array.el_xc), max(exp_data.array.el_xc); ...
         min(exp_data.array.el_xc) + dx, max(exp_data.array.el_xc) - dx];
     options_with_precalcs.geom.lines(1).y = zeros(2,2);
@@ -150,8 +166,10 @@ data.z = options_with_precalcs.data.z;
 %the actual calculation
 data.f = fn_fast_DAS3(exp_data, options_with_precalcs.focal_law, options_with_precalcs.use_gpu_if_available);
 if  isfield(options_with_precalcs.focal_law,'thread_size')
-   data.f=(gather(data.f));
+   data.f=gather(data.f);
+   options_with_precalcs.sensitivity=gather(options_with_precalcs.sensitivity);
 end
+data.f=data.f./options_with_precalcs.sensitivity;
 data.geom = options_with_precalcs.geom;
 end
 
@@ -248,7 +266,7 @@ info.options_info.angle_limit_on.type = 'bool';
 info.options_info.angle_limit_on.constraint = {'On', 'Off'};
 info.options_info.angle_limit_on.default = 1;
 
-if isfield(exp_data, 'vel_poly')
+if isfield(exp_data, 'vel_poly') | isfield(exp_data, 'vel_elipse')
     info.options_info.angle_dependent_vel.label = 'Angle dep. velocity';
     info.options_info.angle_dependent_vel.type = 'bool';
     info.options_info.angle_dependent_vel.constraint = {'On', 'Off'};
@@ -256,10 +274,21 @@ if isfield(exp_data, 'vel_poly')
 end
 
 info.options_info.angle_limit.label = 'Angle limit (degs)';
-info.options_info.angle_limit.default = 30 * pi / 180;
+info.options_info.angle_limit.default = 50 * pi / 180;
 info.options_info.angle_limit.type = 'double';
 info.options_info.angle_limit.constraint = [1, 90] * pi / 180;
 info.options_info.angle_limit.multiplier = pi / 180;
+
+info.options_info.look_angle.label = 'Look angle (degs)';
+info.options_info.look_angle.default = 0 * pi / 180;
+info.options_info.look_angle.type = 'double';
+info.options_info.look_angle.constraint = [-90, 90] * pi / 180;
+info.options_info.look_angle.multiplier = pi / 180;
+
+info.options_info.angle_limit_window.label = 'Aperture window';
+info.options_info.angle_limit_window.default = 'Hanning';
+info.options_info.angle_limit_window.type = 'constrained';
+info.options_info.angle_limit_window.constraint = {'Hanning', 'Rectangular'};
 
 info.options_info.atten_correction_on.label = 'Attenuation correction';
 info.options_info.atten_correction_on.type = 'bool';
@@ -273,9 +302,11 @@ info.options_info.atten.constraint = [0, 1e6];
 info.options_info.atten.multiplier = 1e3; %ans in dB / m
 
 info.options_info.interpolation_method.label = 'Interpolation';
-info.options_info.interpolation_method.default = 'Nearest';
+info.options_info.interpolation_method.default = 'Linear';
 info.options_info.interpolation_method.type = 'constrained';
 info.options_info.interpolation_method.constraint = {'Linear', 'Nearest'};
+
+
 
 % info.options_info.use_gpu_if_available.label = 'Use GPU if available';
 % info.options_info.use_gpu_if_available.type = 'bool';

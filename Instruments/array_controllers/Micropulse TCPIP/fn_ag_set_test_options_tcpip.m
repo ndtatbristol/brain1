@@ -31,6 +31,14 @@ else
 end;
 test_options = fn_set_default_fields(test_options, default_test_options);
 
+if ~isfield(test_options,'tx_delay_law_array')
+    test_options.tx_delay_law_array=zeros(size(test_options.tx_ch));
+end
+
+if ~isfield(test_options,'rx_delay_law_array')
+    test_options.rx_delay_law_array=zeros(size(test_options.tx_ch));
+end
+
 %clear focal laws
 fn_ag_send_command_tcpip('DXN 0 0', 0 , echo_on);
 fn_ag_send_command_tcpip('DLYS 0 0', 0, echo_on);
@@ -43,7 +51,7 @@ fn_ag_set_sample_bits(test_options.sample_bits, echo_on);
 fn_ag_set_prf(test_options.prf, echo_on);
 
 %define the FMC
-[tx_no, rx_no] = fn_ag_define_fmc(test_options.tx_ch, test_options.rx_ch, echo_on);
+[tx_no, rx_no] = fn_ag_define_fmc(test_options.tx_ch, test_options.rx_ch, test_options.tx_delay_law_array, test_options.rx_delay_law_array, echo_on);
 
 %set gain - must be called after fn_define_fmc
 fn_ag_set_db_gain(test_options.db_gain, echo_on);
@@ -194,31 +202,35 @@ end;
 end
 
 %set up focal laws
-function [tx_no, rx_no] = fn_ag_define_fmc(tx_ch, rx_ch, echo_on)
+function [tx_no, rx_no] = fn_ag_define_fmc(tx_ch, rx_ch, tx_delay_law_array, rx_delay_law_array, echo_on)
 
 transmit_laws = size(tx_ch, 1);
 time_traces = length(find(rx_ch));
 tx_no=zeros(time_traces,1)';
 rx_no=zeros(time_traces,1)';
+use_els=size(tx_delay_law_array,2);
 counter = 0;
+
+tx_delay_law_array = round(tx_delay_law_array/1e-9);
+rx_delay_law_array = round(rx_delay_law_array/1e-9);
 
 for fl_ii = 1:transmit_laws %loop through focal laws
 
     %clear existing tx delays
-    for tx_ii = 1:transmit_laws %loop through focal laws
+    for tx_ii = 1:use_els %loop through focal laws
         fn_ag_send_command_tcpip(sprintf('TXF %i %i -1', fl_ii, tx_ii), 0, echo_on);%law, ch, del
     end;
     %find transmitters for each focal law (i.e each row of the tx or rx_matrix
     tx_nos = find(tx_ch(fl_ii,:));
     for tx_ii = 1:length(tx_nos) %add each transmitter specified for focal law
-        fn_ag_send_command_tcpip(sprintf('TXF %i %i 0', fl_ii, tx_nos(tx_ii)), 0, echo_on);%law, ch, del
+        fn_ag_send_command_tcpip(sprintf('TXF %i %i %i', fl_ii, tx_nos(tx_ii), tx_delay_law_array(fl_ii,tx_nos(tx_ii))), 0, echo_on);%law, ch, del
     end;
     %clear existing rx delays
     fn_ag_send_command_tcpip(sprintf('RXF %i 0 -1 0', fl_ii), 0, echo_on);%law, ch, del
     rx_nos = find(rx_ch(fl_ii,:));
     for rx_ii = 1:length(rx_nos); %add receivers to all focal laws
         counter = counter + 1;
-        fn_ag_send_command_tcpip(sprintf('RXF %i %i 0 0', fl_ii, rx_nos(rx_ii)), 0, echo_on);%law, ch, del, trim_amp
+        fn_ag_send_command_tcpip(sprintf('RXF %i %i %i 0', fl_ii, rx_nos(rx_ii), rx_delay_law_array(fl_ii,rx_nos(rx_ii))), 0, echo_on);%law, ch, del, trim_amp
 
         if length(tx_nos)>1
             tx_no(counter) = 1;

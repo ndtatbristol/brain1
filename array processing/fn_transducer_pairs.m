@@ -1,6 +1,6 @@
-function trans_pairs=fn_transducer_pairs(no_of_trans, varargin);
+function trans_pairs=fn_transducer_pairs(no_of_trans, varargin)
 %USAGE
-%   trans_pairs = fn_transducer_pairs(no_of_trans [,include_pulse_echo]);
+%   trans_pairs = fn_transducer_pairs(no_of_trans [,include_pulse_echo, fmc]);
 %AUTHOR
 %	Anthony Croxford (2010), pulse_echo switch added by PDW 2010, FMC
 %	switch in 2013
@@ -9,6 +9,9 @@ function trans_pairs=fn_transducer_pairs(no_of_trans, varargin);
 %   unless second argument is non-zero).
 %INPUTS
 %   no_of_trans - number of transducers
+%   [include_pulse_echo = 0] - include pulse-echo (tx = rx) pairs if
+%   include_pulse_echo = 1
+%   [fmc = 0] - do pairs for FMC rather than HMC if fmc = 1
 %OUTPUTS
 %   trans_pairs - 2 column matrix where rows represent every transmitter-
 %   receiver combination in half-matrix capture with or without pulse-echo

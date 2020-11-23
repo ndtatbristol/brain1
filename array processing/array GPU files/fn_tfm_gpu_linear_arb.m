@@ -72,7 +72,7 @@ k.GridSize = ceil(pixs./k.ThreadBlockSize(1));
 real_result=result;
 imag_result=result;
 
-[real_result imag_result]=feval(k,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, lookup_time,time, pixels, grid_x, grid_y, grid_z, lookup_amp);
+[real_result imag_result]=feval(k,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, lookup_time,time, pixels, grid_x, grid_y, grid_z, lookup_amp,tt_weight);
 
 result=real_result+imag_result.*i;
 result=gather(result);

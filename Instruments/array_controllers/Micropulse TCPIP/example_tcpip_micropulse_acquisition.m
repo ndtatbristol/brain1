@@ -21,7 +21,7 @@ global tcpip_obj
 
 %Array details - all NDT lab arrays should have a corresponding file in the
 %NDT library!
-array_fname = 'Imasonic 1D 64els 5.00MHz 0.63mm pitch.mat';
+array_fname = 'Imasonic 1D 64els 5.00MHz 0.60mm pitch.mat';
 
 %Micropulse connection details
 ip_address = '10.1.1.2';
@@ -134,7 +134,7 @@ TFM_focal_law.filter = fn_calc_filter(exp_data.time, centre_freq, half_bandwidth
 
 %Actual imaging calculation
 tic;
-result_tfm = fn_fast_DAS2(exp_data, TFM_focal_law);
+result_tfm = gather(fn_fast_DAS3(exp_data, TFM_focal_law));
 time_to_image = toc;
 disp(sprintf('TFM image generated in %.3f seconds', time_to_image));
 

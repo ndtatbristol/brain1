@@ -29,12 +29,13 @@ TPC=[];
 %NDT library!
 array_fname = 'Imasonic 1D 64els 5.00MHz 0.63mm pitch.mat';
 %array_fname = '1D 64els 5.00MHz 0.60mm pitch.mat';
+tmp = load(array_fname);
 
 %Micropulse acquisition details
 half_matrix_capture = 0; %1 for half matrix or 0 for full matrix
 test_options.pulse_voltage = 1.6; %max voltage is 96V
-test_options.pulse_width = 1; %pulse width given in number of cycles
-%test_options.pulse_freq = 4.5e6; %if this field is included will override array centre freq
+test_options.pulse_width = 5; %pulse width given in number of cycles
+test_options.pulse_freq = tmp.array.centre_freq; %if this field is included will override array centre freq
 test_options.sample_freq = 25*1e6;
 test_options.time_pts = 500; %max for this setting is 3000 if doing any averaging
 test_options.db_gain = 10; %max gain is 54dB
@@ -67,7 +68,7 @@ db_scale = 80;
 
 %-------------------------------------------------------------------------%
 %Load the array file and set field in exp_data
-tmp = load(array_fname);
+
 exp_data.array = tmp.array;
 
 %Work out the transmit and receive sequence according to the
@@ -111,7 +112,7 @@ RcvData{1}=tmp_dat./soft_averages;
 exp_data.time_data=exp_data.time_data./test_options.averages;
 exp_data.raw_data = exp_data.time_data;
 exp_data.time_data = exp_data.time_data * big_inv_s;
-exp_data.time=exp_data.time-test_options.instrument_delay.*1e-9;
+exp_data.time=exp_data.time-test_options.instrument_delay.*1e-9-((1./(test_options.pulse_freq)).*(test_options.pulse_width/2));
 time_to_capture = toc;
 
 disp(sprintf('Data acquired in %.3f seconds', time_to_capture));

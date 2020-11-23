@@ -15,7 +15,7 @@ res=[];
 if timeout==0
     fprintf(tcpip_obj,cmd_str)
 else
-    readasync(tcpip_obj);
+    %readasync(tcpip_obj);
     
     fprintf(tcpip_obj,cmd_str);
     
@@ -23,7 +23,7 @@ else
         drawnow
     end
     res = fread(tcpip_obj,tcpip_obj.BytesAvailable,'uint8')';
-    stopasync(tcpip_obj)
+    %stopasync(tcpip_obj)
 end
 err=[];
 end

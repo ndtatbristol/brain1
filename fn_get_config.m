@@ -52,7 +52,7 @@ config.main_win.raw_data_panel.position = [0.25, 0, 0.75, 1];
 config.main_win.raw_data_panel.border_type = 'etchedin';
 config.main_win.raw_data_panel.time_axis_scalefactor = 1e6;
 config.main_win.raw_data_panel.vert_axis_scalefactor = 1;
-config.main_win.raw_data_panel.time_axis_label = 'Time (us)';
+config.main_win.raw_data_panel.time_axis_label = 'Time (\mus)';
 config.main_win.raw_data_panel.vert_axis_label = 'Receiver number';
 
 %Main window details - status panel

@@ -11,11 +11,11 @@ info.options_info.port_no.label = 'Port number';
 info.options_info.port_no.default = 1067;
 info.options_info.port_no.type = 'int';
 info.options_info.port_no.constraint = [1, 99999];
-        
+
 info.options_info.acquire_mode.label = 'Acquisition';
 info.options_info.acquire_mode.default = 'HMC'; %Sample frequency (MHz); int; 1e6; {25, 50, 100}
 info.options_info.acquire_mode.type = 'constrained';
-info.options_info.acquire_mode.constraint = {'SAFT', 'FMC', 'HMC', 'CSM'};
+info.options_info.acquire_mode.constraint = {'SAFT', 'FMC', 'HMC', 'CSM', 'HADAMARD'};
 
 info.options_info.sample_freq.label = 'Sample frequency (MHz)';
 info.options_info.sample_freq.default = '25'; %Sample frequency (MHz); int; 1e6; {25, 50, 100}
@@ -91,6 +91,8 @@ tx_no = [];
 rx_no = [];
 time_axis = [];
 options_sent = 0;
+hadamard_excite = 0;
+big_inv_s = [];
 
     function exp_data = fn_acquire(dummy)
         exp_data = [];
@@ -102,6 +104,10 @@ options_sent = 0;
             return;
         end
         exp_data.time_data = fn_ag_do_test;
+        if hadamard_excite
+            exp_data.raw_data = exp_data.time_data;
+            exp_data.time_data = exp_data.time_data * big_inv_s;
+        end
         exp_data.tx = tx_no;
         exp_data.rx = rx_no;
         exp_data.time = time_axis;
@@ -113,19 +119,41 @@ options_sent = 0;
         end
         switch options.acquire_mode
             case 'SAFT'
+                hadamard_excite = 0;
                 [options.tx_ch, options.rx_ch] = fn_set_fmc_input_matrices(no_channels, 0);
                 options.rx_ch = options.tx_ch;
             case 'FMC'
+                hadamard_excite = 0;
                 [options.tx_ch, options.rx_ch] = fn_set_fmc_input_matrices(no_channels, 0);
             case 'HMC'
+                hadamard_excite = 0;
                 [options.tx_ch, options.rx_ch] = fn_set_fmc_input_matrices(no_channels, 1);
             case 'CSM'
                 options.tx_ch = ones(1, no_channels);
                 options.rx_ch = ones(1, no_channels);
+            case 'HADAMARD'
+                hadamard_excite = 1;
+                [options.tx_ch, options.rx_ch] = fn_set_fmc_input_matrices(no_channels, 0);
+                h = hadamard(2^nextpow2(no_channels+1));
+                s = (-h(2:end, 2:end) + 1) / 2;
+                s = s(1:no_channels, 1:no_channels);
+                options.tx_ch = s;
+                s_inv = inv(s);
+                n = size(s_inv, 2);
+                r = repmat([1: n ^ 2]',n, 1);
+                c = repmat([1: n]',n, n) + repmat([0: n - 1] * n, n ^ 2, 1);
+                big_inv_s = repmat(s_inv(:)',[n,1]);
+                big_inv_s = big_inv_s(:);
+                big_inv_s = sparse(r(:), c(:), big_inv_s(:), n ^ 2, n ^ 2);
+                                
         end
         options.sample_freq  = str2num(options.sample_freq) * 1e6;
         options.sample_bits = str2num(options.sample_bits);
         [tx_no, rx_no] = fn_ag_set_test_options(options, echo_on);
+        if hadamard_excite
+            pairs = fn_transducer_pairs(no_channels,1,1);
+            tx_no = pairs(:,1)';
+        end
         time_step = 1 / options.sample_freq;
         time_axis = [options.gate_start:time_step:options.gate_start + time_step*(options.time_pts-1)]' - options.instrument_delay;
         options_sent = 1;

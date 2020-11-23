@@ -100,10 +100,12 @@ options_sent = 0;
         exp_data.rx = rx_no;
     end
 
-    function fn_send_options(options, no_channels)
+    function fn_send_options(options, array, material)
         if ~connected
             return;
         end
+        no_channels = length(array.el_xc(:));
+
         %Array details - all NDT lab arrays should have a corresponding file in the
         %NDT library!
         array_fname = 'Imasonic 1D 64els 2.00MHz 1.57mm pitch.mat'; %Needed to setup some things in DSL CFG file but no longer effects acquisition

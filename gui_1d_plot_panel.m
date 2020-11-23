@@ -8,7 +8,7 @@ default_options.global_max = [];
 default_options.norm_val = [];
 default_options.x_lim = [];
 default_options.z_lim = [];
-default_options.x_label = '';
+default_options.x_label = 'Time (\mus)';
 default_options.z_label = '';
 default_options.select = [];
 default_options.x_axis_sf = 1e6;
@@ -104,12 +104,15 @@ h_pan = pan;
         %set plot value
         if fn_get_control_status(h_toolbar, 'plotwhat.real')
             options.plotwhat = 'real';
+            options.z_label = 'Amplitude';
         end;
         if fn_get_control_status(h_toolbar, 'plotwhat.mod')
             options.plotwhat = 'mod';
+            options.z_label = 'Amplitude';
         end;
         if fn_get_control_status(h_toolbar, 'plotwhat.arg')
             options.plotwhat = 'arg';
+            options.z_label = 'Phase (deg)';
         end;
         %set cursor type
         if fn_get_control_status(h_toolbar, 'cursor.point')
@@ -496,7 +499,6 @@ h_pan = pan;
                 fn_radio_group2(h_toolbar, tag, 0);
                 fn_zoom;
             case 'zoomout'
-                %                 fn_radio_group2(h_toolbar, tag, 0);
                 fn_zoom_out;
             case 'view.pan'
                 fn_radio_group2(h_toolbar, tag, 0);
@@ -542,13 +544,13 @@ h_pan = pan;
                 fn_handle_custom_button_push(get(src, 'String'));
             case 'range'
                 fn_range_change(src);
-                fn_update_graphs;
+                fn_zoom_out;
             case 'max_value'
                 fn_range_change(src);
-                fn_update_graphs;
+                fn_zoom_out;
             case 'min_value'
                 fn_range_change(src);
-                fn_update_graphs;
+                fn_zoom_out;
             case 'normalise'
                 fn_normalise;
                 fn_update_graphs;
@@ -673,7 +675,7 @@ h_pan = pan;
             end
         end
         if ~isempty(h)
-            legend(h, str);
+            legend(h, str, 'AutoUpdate', 'Off');
         end
         if reset_x_lim
             xlim(h_axes.main, options.x_lim * options.x_axis_sf);
@@ -713,6 +715,7 @@ h_pan = pan;
         set(h_plot_objects.selection_text, 'String', pointer_str);
         set(h_plot_objects.range_text, 'String', range_str);
         
+%         pause(0.1);
         %         fn_set_sliders;
     end
 

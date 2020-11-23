@@ -348,7 +348,7 @@ info.options_info.interpolation_method.type = 'constrained';
 info.options_info.interpolation_method.constraint = {'Linear', 'Nearest'};
 
 info.options_info.couplant_velocity.label = 'Couplant velocity';
-info.options_info.couplant_velocity.default = 1480;
+info.options_info.couplant_velocity.default = 2350;
 info.options_info.couplant_velocity.type = 'double';
 info.options_info.couplant_velocity.constraint = [1,20000];
 info.options_info.couplant_velocity.multiplier = 1;

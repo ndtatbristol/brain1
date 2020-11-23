@@ -150,8 +150,8 @@ for ii = 1:length(array.el_xc)
     total_time = sample_time + repmat(couplant_time(ii, :), [size(p, 1),1]);
     [min_time, jj] = min(total_time, [], 2);
     amp = double((jj > 1) & (jj < length(surface.x)));
-    if immersion_options.angle_limit_on && immersion_options.angle_limit > 0
-        amp = amp .* (abs(couplant_angs(ii, jj)) <= immersion_options.angle_limit)'; 
+    if immersion_options.angle_limit_on && immersion_options.max_angle_in_couplant > 0
+        amp = amp .* (abs(couplant_angs(ii, jj)) <= immersion_options.max_angle_in_couplant)'; 
         %note there is no distance compensation for fixed angle here as it
         %is not clear how to do it (cf. contact TFM)
     end

@@ -1,6 +1,6 @@
-function [focal_law]=fn_load_kernel(focal_law);
+function [focal_law] = fn_load_kernel(focal_law)
 
-if(exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)
+if fn_check_for_gpu
     if exist('fn_fast_DAS3','file')
         if ~isfield(focal_law, 'thread_size')
             focal_law.thread_size=128;
@@ -27,8 +27,7 @@ if(exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)
             else
                 method = 'Different Tx and RX laws, FMC data';
             end
-        else
-            method = 'Same Tx and RX laws';
+        else            method = 'Same Tx and RX laws';
         end
         
         method = [method, ' (', focal_law.interpolation_method, ')'];

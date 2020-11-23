@@ -1,4 +1,4 @@
-function [fig_handle, h_fn_update_data, h_fn_get_options, h_fn_set_options] = gui_process_window(fn_imaging_process, fn_close, exp_data, start_in_folder, use_gpu, data_folder)
+function [fig_handle, h_fn_update_data, h_fn_get_options, h_fn_set_options] = gui_process_window(fn_imaging_process, fn_close, exp_data, start_in_folder, data_folder)
 %this generates a generic processing window (i.e. with algorithm control
 %and a display panel and returns handles to the update function (call as
 %fn_update_data and a function to return the current options settings
@@ -6,6 +6,8 @@ function [fig_handle, h_fn_update_data, h_fn_get_options, h_fn_set_options] = gu
 %fn_get_options)
 %exp_data is passed to enable initial options to be set if they use
 %exp_data parameters in function arguments
+
+global GPU_PRESENT
 
 config = fn_get_config;
 
@@ -25,14 +27,12 @@ paused = 0;
 
 info = fn_imaging_process(exp_data, [], 'return_info_only');
 
-%add final option to all processes to enable/disable GPU with default a/c to how use_gpu is set
-info.options_info.use_gpu_if_available.label = 'Use GPU if available';
-info.options_info.use_gpu_if_available.type = 'bool';
-info.options_info.use_gpu_if_available.constraint = {'On', 'Off'};
-if use_gpu
-    info.options_info.use_gpu_if_available.default = 1;
-else
-    info.options_info.use_gpu_if_available.default = 0;
+%add final option to all processes to enable/disable GPU if one is present
+if GPU_PRESENT
+    info.options_info.use_gpu.label = 'Use GPU';
+    info.options_info.use_gpu.type = 'bool';
+    info.options_info.use_gpu.constraint = {'On', 'Off'};
+    info.options_info.use_gpu.default = 1;
 end
 
 fn = fieldnames(info.options_info);

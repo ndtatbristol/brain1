@@ -16,6 +16,24 @@ else
         available_instruments = [];
         return;
     end
+    
+    %check for instrument control toolbox and remove appropriate instrument
+    V = ver;
+    VName = {V.Name};
+    instr_control_pres=any(strcmp(VName, 'Instrument Control Toolbox'));
+    for ii=1:length(tmp)
+        all_names{ii}=tmp(ii).name;
+    end
+    if instr_control_pres
+        file_pres=strcmp(all_names,'fn_notb_micropulse_wrapper.m');
+        rem_inst=find(file_pres);
+    else
+        file_pres=strcmp(all_names,'fn_tcpip_micropulse_wrapper.m');
+        rem_inst=find(file_pres);
+    end
+    new_tmp=tmp([1:rem_inst-1 rem_inst+1:end]);
+    tmp=new_tmp;
+    
     for ii = 1:length(tmp)
         available_instruments(ii).fn_instrument = str2func(tmp(ii).name(1:end-2));
     end

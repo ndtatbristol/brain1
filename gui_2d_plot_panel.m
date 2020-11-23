@@ -765,7 +765,7 @@ h_pan = pan;
     end
 
     function fn_normalise
-        if isempty(options.select) | (~fn_get_control_status(h_toolbar, 'cursor.point') & ~fn_get_control_status(h_toolbar, 'cursor.region'))
+        if ~isfield(options, 'select') | isempty(options.select) | (~fn_get_control_status(h_toolbar, 'cursor.point') & ~fn_get_control_status(h_toolbar, 'cursor.region'))
             button = questdlg('Re-normalise to global maximum?','Normalisation','Yes', 'No', 'Yes');
             if strcmp(button, 'No')
                 return;
@@ -835,11 +835,9 @@ h_pan = pan;
         if fn_get_control_status(h_toolbar, 'cursor.region')
             if next_point == 1
                 options.select = tmp ./ [options.x_axis_sf, options.z_axis_sf];
-                options.select
                 next_point = 2;
             else
                 options.select = [options.select; tmp ./ [options.x_axis_sf, options.z_axis_sf]];
-                options.select
                 next_point = 1;
             end;
             fn_update_cursor;

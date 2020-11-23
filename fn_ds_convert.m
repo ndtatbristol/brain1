@@ -3,6 +3,10 @@ function exp_data=fn_ds_convert(fname, varargin);
 %close all
 %clear all
 
+%Modified by PDW so fname argument should now include extension. This 
+%function (11/9/19)
+
+
 %fname='fit_frameFRD';
 if nargin<2
     ph_vel=6300;
@@ -10,8 +14,10 @@ else
     ph_vel=varargin{1};
 end
 
-fnamepng=[fname '.png'];
-fnamecfg=[fname '.cfg'];
+[p,f,e] = fileparts(fname);
+
+fnamepng=[p, f, '.png'];
+fnamecfg=[p, f, '.cfg'];
 
 %load and convert the ultrasonic data
 data=imread(fnamepng);

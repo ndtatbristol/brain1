@@ -4,11 +4,11 @@ function [material, fname] = fn_input_new_material_details(materials_path)
 
 config = fn_get_config;
 
-default_ph_velocity = 1000;
+default_velocity = 1000;
 default_name = 'New material';
 
 material.name = default_name;
-material.ph_velocity = default_ph_velocity;
+material.vel_spherical_harmonic_coeffs = default_velocity;
 fname = fn_get_fname;
 
 %create figure
@@ -21,8 +21,7 @@ f = figure('Position', ...
     'NumberTitle', 'off', ...
     'ToolBar', 'None', ...
     'WindowStyle', 'Modal', ...
-    'Name', 'Create new material', ...
-    'ResizeFcn', @fn_window_resize ...
+    'Name', 'Create new material' ...
 );
 
 h_ok_btn = uicontrol('Style', 'PushButton', 'String', 'OK', 'Callback', @fn_ok);
@@ -33,18 +32,20 @@ content_info.name.label = 'Name';
 content_info.name.default = default_name;
 content_info.name.type = 'string';
 
-content_info.ph_velocity.label = 'Nominal velocity (m/s)';
-content_info.ph_velocity.default = default_ph_velocity;
-content_info.ph_velocity.type = 'double';
-content_info.ph_velocity.constraint = [0.01, 100000];
-content_info.ph_velocity.multiplier = 1;
+content_info.velocity.label = 'Velocity (m/s)';
+content_info.velocity.default = default_velocity;
+content_info.velocity.type = 'double';
+content_info.velocity.constraint = [0.01, 100000];
+content_info.velocity.multiplier = 1;
 
 h_fn_set_content(content_info);
+set(f, 'Visible', 'On', 'ResizeFcn', @fn_window_resize);
+fn_window_resize([], []);
 uiwait(f);
 
     function fn_new_params(params)
         material.name = params.name;
-        material.ph_velocity = params.ph_velocity;
+        material.vel_spherical_harmonic_coeffs = params.velocity;
         fname = fn_get_fname;
     end
 
@@ -54,7 +55,13 @@ uiwait(f);
     end
 
     function fname = fn_get_fname
-        fname = sprintf([material.name, ' (%i)'], round(material.ph_velocity));
+        [v_mean, v_x, v_y, v_z]= fn_get_nominal_velocity(material.vel_spherical_harmonic_coeffs);
+        if (v_x ~= v_mean) || (v_y ~= v_mean) || (v_z ~= v_mean)
+            s = ' variable';
+        else
+            s ='';
+        end
+        fname = sprintf([material.name, ' (%i', s, ')'], round(v_mean));
     end
 
     function fn_window_resize(x, y)

@@ -24,16 +24,16 @@ function window = fn_gaussian(number_of_points, peak_pos_fract, half_width_fract
 %set defaults
 default_db_down = 40;
 default_force_zero = 0;
-if nargin < 4;
+if nargin < 4
    db_down = default_db_down;
 else
    db_down = varargin{1};
-end;
-if nargin < 5;
+end
+if nargin < 5
    force_zero = default_force_zero;
 else
    force_zero = varargin{2};
-end;
+end
 
 fract = 10.0 ^ (-db_down / 20.0);
 r = (linspace(0, 1, number_of_points) - peak_pos_fract)';
@@ -41,6 +41,6 @@ r1 = half_width_fract / ((-log(fract)) ^ 0.5);
 window = exp(-(r / r1) .^ 2);
 if force_zero
 	window(find(window < fract)) = 0.0;
-end;
+end
 
 return;

@@ -37,7 +37,10 @@ function [result, varargout] = fn_fast_DAS3(exp_data, focal_law,varargin)
 %   double pitch-catch signals if half matrix capture used)
 %   focal_law.interpolation_method = sets how time-domain data is
 %   interpolated; 'nearest' means no interpolation and nearest point is
-%   used; 'linear' means linear interpolation
+%   used; 'linear' means linear interpolation, 'lanczos2' or 'lanczos3' use 
+%   Lanczos interpolation where a = 2 or a = 3 respectively, where a is the
+%   filter size. Lanzcos interpolation only available if GPU enabled, otherwise
+%   will return TFM with linear interpolation.
 %   [use_gpu_if_available = 1] - optional argument to enable/ disable use of GPU if
 %   one is present. Default is enabled.
 %OUTPUTS
@@ -65,13 +68,20 @@ else
     use_gpu_if_available = 1;
 end
 
-if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)
+use_gpu = use_gpu_if_available && fn_check_for_gpu;
+
+if  ~use_gpu && (strcmp(focal_law.interpolation_method, 'lanczos2') || strcmp(focal_law.interpolation_method, 'lanczos3'))
+    warning('Lanczos interpolation not available for CPU. Defaulting to linear interpolation');
+    focal_law.interpolation_method = 'linear';
+end
+
+if use_gpu
+    %GPU version
     if ~isfield(focal_law, 'tt_ind')
         focal_law.tt_ind = 1:length(exp_data.tx);
     end
     
     if ~isfield(focal_law, 'thread_size')
-%         gpu_han=gpuDevice(1);
         focal_law.thread_size=128; %hard-coded nightmare! should be OK
     end
     
@@ -85,8 +95,7 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
     else
         sep_tx_rx_laws = 1;
         img_size=size(focal_law.lookup_time_tx);
-    end;
-    
+    end
     
     if ~isfield(focal_law, 'hmc_data')
         hmc_data = any(focal_law.tt_weight == 2); %HMC needs to be considered differently if sep tx and rx laws are used
@@ -167,6 +176,7 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
     
     %Now the main loops - different loop depending on method and whether a kernel is preloaded.
     switch method
+        %% Nearest Interpolation methods
         case 'Same Tx and RX laws (nearest)'
             if ~isfield(focal_law, 'kern')
                 focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_near_norm');
@@ -177,9 +187,14 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             focal_law.kern.GridSize = ceil(pixs./focal_law.kern.ThreadBlockSize(1));
             
             [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_ind, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp, tt_weight);
-        case 'Different Tx and RX laws, FMC data (nearest)'
+        case {'Different Tx and RX laws, FMC data (nearest)','Different Tx and RX laws, HMC data (nearest)'}
             if ~isfield(focal_law, 'kern')
-                focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_near_2dly');
+                switch method
+                    case 'Different Tx and RX laws, FMC data (nearest)'
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_near_2dly');
+                    case 'Different Tx and RX laws, HMC data (nearest)'
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_near_hmc');
+                end
                 focal_law.kern.ThreadBlockSize = 128;
                 focal_law.lookup_ind_tx= gpuArray(int32(focal_law.lookup_ind_tx));
                 focal_law.lookup_ind_rx= gpuArray(int32(focal_law.lookup_ind_rx));
@@ -189,37 +204,29 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             focal_law.kern.GridSize = ceil(pixs./focal_law.kern.ThreadBlockSize(1));
             
             [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_ind_tx, focal_law.lookup_ind_rx, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp_tx,focal_law.lookup_amp_rx,tt_weight);
-        case 'Different Tx and RX laws, HMC data (nearest)'
-            if ~isfield(focal_law, 'kern')
-                focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_near_hmc');
-                focal_law.kern.ThreadBlockSize = 128;
-                focal_law.lookup_ind_tx= gpuArray(int32(focal_law.lookup_ind_tx));
-                focal_law.lookup_ind_rx= gpuArray(int32(focal_law.lookup_ind_rx));
-                focal_law.lookup_amp_tx=gpuArray(single(focal_law.lookup_amp_tx));
-                focal_law.lookup_amp_rx=gpuArray(single(focal_law.lookup_amp_rx));
-            end
-            focal_law.kern.GridSize = ceil(pixs./focal_law.kern.ThreadBlockSize(1));
             
-            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_ind_tx, focal_law.lookup_ind_rx, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp_tx,focal_law.lookup_amp_rx,tt_weight);
-            
-            %Linear interpolation methods
-            
+        %% Linear interpolation methods 
         case 'Same Tx and RX laws (linear)'
             if ~isfield(focal_law, 'kern')
                 focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_linear_norm');
                 focal_law.kern.ThreadBlockSize = 128;
-                %focal_law.lookup_time= gpuArray(single(focal_law.lookup_time));
-                %focal_law.lookup_amp= gpuArray(single(focal_law.lookup_amp));
+                focal_law.lookup_time= gpuArray(single(focal_law.lookup_time));
+                focal_law.lookup_amp= gpuArray(single(focal_law.lookup_amp));
             end
             focal_law.kern.GridSize = ceil(pixs./focal_law.kern.ThreadBlockSize(1));
             
             time= gpuArray(single(exp_data.time));
                                  
-            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp, tt_weight);
-            
-        case 'Different Tx and RX laws, FMC data (linear)'
+            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp, tt_weight); 
+        case {'Different Tx and RX laws, FMC data (linear)','Different Tx and RX laws, HMC data (linear)'}
             if ~isfield(focal_law, 'kern')
-                focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_linear_2dly');
+                switch method
+                    case 'Different Tx and RX laws, FMC data (linear)'
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_linear_2dly');
+                    case 'Different Tx and RX laws, HMC data (linear)'
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_linear_hmc');
+                end
+                
                 focal_law.kern.ThreadBlockSize = 128;
                 focal_law.lookup_time_tx= gpuArray(single(focal_law.lookup_time_tx));
                 focal_law.lookup_time_rx= gpuArray(single(focal_law.lookup_time_rx));
@@ -232,9 +239,40 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             
             [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time_tx, focal_law.lookup_time_rx,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp_tx, focal_law.lookup_amp_rx, tt_weight);
             
-        case 'Different Tx and RX laws, HMC data (linear)'
+        %% Lanczos Interpolation Methods
+        case {'Same Tx and RX laws (lanczos2)','Same Tx and RX laws (lanczos3)'}
+            switch method
+                case 'Same Tx and RX laws (lanczos2)'
+                    aFactor=2;
+                otherwise
+                    aFactor=3;
+            end
             if ~isfield(focal_law, 'kern')
-                focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_linear_hmc');
+                focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_lanczos_norm');
+                focal_law.kern.ThreadBlockSize = 128;
+                focal_law.lookup_time= gpuArray(single(focal_law.lookup_time));
+                focal_law.lookup_amp= gpuArray(single(focal_law.lookup_amp));
+            end
+            focal_law.kern.GridSize = ceil(pixs./focal_law.kern.ThreadBlockSize(1));
+            
+            time= gpuArray(single(exp_data.time));
+            
+            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp,tt_weight,aFactor);
+              
+        case {'Different Tx and RX laws, FMC data (lanczos2)','Different Tx and RX laws, FMC data (lanczos3)','Different Tx and RX laws, HMC data (lanczos2)','Different Tx and RX laws, HMC data (lanczos3)'}
+            switch method
+                case {'Different Tx and RX laws, FMC data (lanczos2)','Different Tx and RX laws, HMC data (lanczos2)'}
+                    aFactor=2;
+                otherwise
+                    aFactor=3;
+            end
+            if ~isfield(focal_law, 'kern')
+                switch method
+                    case {'Different Tx and RX laws, FMC data (lanczos2)','Different Tx and RX laws, FMC data (lanczos3)'}
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_lanczos_2dly');
+                    case {'Different Tx and RX laws, HMC data (lanczos2)','Different Tx and RX laws, HMC data (lanczos3)'}
+                        focal_law.kern = parallel.gpu.CUDAKernel(ptx_file, 'gpu_tfm.cu', 'tfm_lanczos_hmc');
+                end
                 focal_law.kern.ThreadBlockSize = 128;
                 focal_law.lookup_time_tx= gpuArray(single(focal_law.lookup_time_tx));
                 focal_law.lookup_time_rx= gpuArray(single(focal_law.lookup_time_rx));
@@ -245,8 +283,10 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             
             time= gpuArray(single(exp_data.time));
             
-            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time_tx, focal_law.lookup_time_rx,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp_tx, focal_law.lookup_amp_rx, tt_weight);
-            
+            [real_result imag_result]=feval(focal_law.kern,real_result,imag_result,n,combs,real_exp,img_exp,tx, rx, focal_law.lookup_time_tx, focal_law.lookup_time_rx,time, pixels, grid_x, grid_y, grid_z, focal_law.lookup_amp_tx, focal_law.lookup_amp_rx, tt_weight,aFactor);
+        otherwise
+            disp('WARNING: Unrecognised focal law for TFM processing. No calculation undertaken')
+                
     end
     result=real_result+imag_result.*1i;
     if length(img_size)==3
@@ -254,7 +294,7 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
         result=double(result);
     end
 else
-    
+    %None GPU version
     if isfield(focal_law, 'lookup_time')
         result_dims = size(focal_law.lookup_time);
     else
@@ -276,15 +316,19 @@ else
     if isfield(focal_law, 'lookup_time')
         sep_tx_rx_laws = 0;
         focal_law.lookup_time = reshape(focal_law.lookup_time, prod(result_dims), []);
-        focal_law.lookup_ind = reshape(focal_law.lookup_ind, prod(result_dims), []);
+        if (isfield(focal_law,'lookup_ind'))
+            focal_law.lookup_ind = reshape(focal_law.lookup_ind, prod(result_dims), []);
+        end
         focal_law.lookup_amp = reshape(focal_law.lookup_amp, prod(result_dims), []);
     else
         sep_tx_rx_laws = 1;
         focal_law.lookup_time_tx = reshape(focal_law.lookup_time_tx, prod(result_dims), []);
-        focal_law.lookup_ind_tx = reshape(focal_law.lookup_ind_tx, prod(result_dims), []);
-        focal_law.lookup_amp_tx = reshape(focal_law.lookup_amp_tx, prod(result_dims), []);
         focal_law.lookup_time_rx = reshape(focal_law.lookup_time_rx, prod(result_dims), []);
-        focal_law.lookup_ind_rx = reshape(focal_law.lookup_ind_rx, prod(result_dims), []);
+        if (isfield(focal_law,'lookup_ind_rx') && isfield(focal_law,'lookup_ind_tx'))
+            focal_law.lookup_ind_tx = reshape(focal_law.lookup_ind_tx, prod(result_dims), []);
+            focal_law.lookup_ind_rx = reshape(focal_law.lookup_ind_rx, prod(result_dims), []);
+        end
+        focal_law.lookup_amp_tx = reshape(focal_law.lookup_amp_tx, prod(result_dims), []);
         focal_law.lookup_amp_rx = reshape(focal_law.lookup_amp_rx, prod(result_dims), []);
     end;
     

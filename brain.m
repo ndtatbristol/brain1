@@ -17,7 +17,7 @@ function brain(varargin)
 evalin('base','close all, clear all')
 close all;
 clc;
-global SYSTEM_TYPES
+global SYSTEM_TYPES GPU_PRESENT
 %first set of declarations create these as global variables on the
 %workspace, while the second set make them available in the function
 evalin('base','global Trans')
@@ -48,7 +48,8 @@ global VDAS
 global Control
 global VSX_Control
 global array
-global ph_velocity
+% global ph_velocity
+global material
 global RcvProfile
 global TPC
 
@@ -91,12 +92,19 @@ if ~isdeployed
     catch
         disp(['Could not change directory (', brain_folder, ')']);
     end
+    %add brain subfolders to path and remember what it was before for when
+    %brain exits
+    old_path = addpath(genpath(pwd));
 end
 
 %load configuration data
 config = fn_get_config;
 local_folder = current_dir_when_brain_started;
-fn_prepare_brain_folders(local_folder, brain_folder, config);
+
+%Add local folders if local_folder not brain_folder
+if ~strcmp(local_folder, brain_folder)
+    fn_prepare_brain_folders(local_folder, brain_folder, config);
+end
 setup = config.default_setup;
 setup.gpu=1;
 
@@ -120,45 +128,8 @@ else
 end
 
 %actually test for GPU
-use_gpu = use_gpu & fn_test_if_gpu_present_and_working(1);
-
-% %following is bodge - should put these GPU files library
-% if use_gpu
-%     if ~isdeployed
-%         addpath('GPU');
-%     else
-%         %??
-%     end
-% end
-
-%FOLLOWING IS OBSOLETE (29/6/12) but may be useful at some point. Relates
-%to arguments specifying setup file etc.
-%Identify local folder (either folder where run from or first optional
-%argument - this is same in both Matlab and Standalone versions
-% if nargin >= 1 && ~isempty(varargin{1}) &&(exist(varargin{1}) == 7)
-%     local_folder = varargin{1};
-% else
-%     local_folder = current_dir_when_brain_started;
-% end
-
-%Identify initial setup file (either last setup file in local folder
-%structure of second optional argument - this is same in both Matlab and
-%Standalone versions
-% if nargin >= 2 && ~isempty(varargin{2})
-%     setup_file = varargin{2};
-% else
-%     setup_file = fullfile(local_folder, config.files.local_brain_path, config.files.setups_path, config.files.last_setup_file);
-% end
-%     setup_file = fullfile(local_folder, config.files.local_brain_path, config.files.setups_path, config.files.last_setup_file);
-
-%Prepare local folder structure if they don't exist already and brian is
-%not being run from master folder
-
-%load last setup or, if not found, default setup
-% if exist(setup_file) == 2 & config.general.load_last_setup
-%     load(setup_file, '-mat');
-% else
-% end
+GPU_PRESENT = fn_test_if_gpu_present_and_working(1);
+GPU_PRESENT = use_gpu & GPU_PRESENT;
 
 if ~isfield(setup, 'data_folder')
     setup.data_folder = local_folder;
@@ -214,7 +185,7 @@ end
 fps_string = '';
 
 window_title = [config.main_win.title, sprintf(' (%.2f)', config.main_win.version)];
-if use_gpu
+if GPU_PRESENT
     window_title = [window_title, ' GPU'];
     config.main_win.gpu=1;
 else
@@ -231,10 +202,6 @@ main.handle = figure('MenuBar', 'none', ...
     'OuterPosition', setup.main_win.non_maximised_position, ...
     'DeleteFcn', @fn_close_main_window ...
     );
-% jFrame = get(handle(main.handle),'JavaFrame');
-% if isfield(setup, 'main_win.maximised')
-%     jFrame.setMaximized(setup.main_win.maximised);
-% end
 
 %run the setup functions
 fn_initialisation;
@@ -377,7 +344,7 @@ callbacks_disabled = 0;
                     setup.gui_process_window(ii).fn_get_options_handle, ...
                     setup.gui_process_window(ii).fn_set_options_handle] = ...
                     gui_process_window(setup.gui_process_window(ii).process_options.fn_process, ...
-                    @fn_display_window_closing, exp_data, local_folder, use_gpu, setup.data_folder);
+                    @fn_display_window_closing, exp_data, local_folder, setup.data_folder);
                 if ~isempty(setup.gui_process_window(ii).figure_handle)
                     fig_exists(ii) = 1;
                     setup.gui_process_window(ii).fn_set_options_handle(setup.gui_process_window(ii));
@@ -482,7 +449,8 @@ callbacks_disabled = 0;
         else
             tmp = '';
         end;
-        str{end + 1} = sprintf(['Velocity: %.1f m/s', tmp], exp_data.ph_velocity);
+%         str{end + 1} = sprintf(['Velocity: %.1f m/s', tmp], exp_data.ph_velocity);
+        str{end + 1} = sprintf(['Velocity: %.1f m/s', tmp], fn_get_nominal_velocity(exp_data.material.vel_spherical_harmonic_coeffs));
         set(main.instr_panel.h_material, 'String', str, 'Value', length(str));
         
         str = get(main.instr_panel.h_array, 'String');
@@ -515,7 +483,8 @@ callbacks_disabled = 0;
                 fn_array_select(ii);                
             case 'instr_connect'
                 array = fn_get_array;
-                [ph_velocity, vel_poly] = fn_get_ph_velocity;
+                material = fn_get_material;
+%                 [ph_velocity, vel_poly, vel_elipse] = fn_get_ph_velocity;
                 fn_instrument_connect;
             case 'instr_reset'
                 fn_instrument_reset;
@@ -582,19 +551,20 @@ callbacks_disabled = 0;
         if ~isfield(exp_data, 'array')
             warndlg('Select array first','Warning')
             return;
-        end;
-        if ~isfield(exp_data, 'ph_velocity')
+        end
+%         if ~isfield(exp_data, 'ph_velocity')
+        if ~(isfield(exp_data, 'material') || isfield(exp_data, 'ph_velocity'))
             warndlg('Select material first','Warning')
             return;
-        end;
+        end
         %show a list box of available processes and let user select one
         for ii = 1:length(available_imaging)
             proc_names{ii} = available_imaging(ii).name;
-        end;
+        end
         [jj, ok] = listdlg('ListString', proc_names, 'SelectionMode', 'single');
         if ~ok
             return;
-        end;
+        end
         
         %add a new panel get a handle to the update function for the
         %display
@@ -611,7 +581,7 @@ callbacks_disabled = 0;
             gui_process_window( ...
             available_imaging(jj).fn_process, ...
             @fn_display_window_closing, ...
-            exp_data, local_folder, use_gpu, setup.data_folder);
+            exp_data, local_folder, setup.data_folder);
         if ii > 1
             last_options = setup.gui_process_window(ii - 1).fn_get_options_handle();
             current_options = setup.gui_process_window(ii).fn_get_options_handle();
@@ -684,73 +654,88 @@ callbacks_disabled = 0;
     end
 
     function fn_play(play_once)
+        %this function is entered when 'play/stop' button is pressed (both
+        %cases) and when 'play once' button is pressed.
+        %However, once running in play mode, control stays in while loop
+        %in this function which will exit when the stop button is detected.
+        %Hence there is no need to take any action if function is entered
+        %on a 'Stop' event (which will be queued) because it will already 
+        %have been dealt with.
+        
         %get array and material
         data_is_from_file = 0;
         array = fn_get_array;
-        [ph_velocity, vel_poly] = fn_get_ph_velocity;
-        if (isempty(array) | isempty(ph_velocity)) & setup.current_instr > 1
+        material = fn_get_material;
+        
+        %put all instrument control stuff in one variable to pass to
+        %acquire function for instrument
+        instr_control_data = main.instr_panel.fn_get_data();
+        instr_control_data.play_button_state = get(main.instr_panel.h_play, 'value');
+        instr_control_data.play_once = play_once;
+        
+        if ~play_once && ~instr_control_data.play_button_state
+            return
+        end
+
+        if (isempty(array) || isempty(material)) && setup.current_instr > 1
             set(main.instr_panel.h_play, 'value', 0);
             return;
-        end;
+        end
         try
-            if get(main.instr_panel.h_play, 'value') | play_once
+            if instr_control_data.play_button_state || play_once
+                %if 'play' or 'play once', get ready!
                 fps_string = '';
                 %play case - send set up
                 set(main.status_image.title, 'String', {...
                     ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
                     'Sending set up ...', fps_string});
-                if setup.current_instr > 1
-                    available_instruments(setup.current_instr).fn_send_instr_options(...
-                        main.instr_panel.fn_get_data(), length(array.el_xc));
-                else
-                    %If its the emulator
-                    available_instruments(setup.current_instr).fn_send_instr_options(...
-                        main.instr_panel.fn_get_data(), 0);
-                end
+                available_instruments(setup.current_instr).fn_send_instr_options(...
+                    main.instr_panel.fn_get_data(), array, material);
                 set(main.status_image.title, 'String', {...
                     ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
                     'Sending set up ... done', fps_string});
                 if ~play_once
                     set(main.instr_panel.h_play, 'CData', fn_get_cdata_for_named_icon(icons, 'stop'));
                 end
-            else
-                %this is the stop case!
-                set(main.status_image.title, 'String', {...
-                    ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
-                    'Stopped', ' '});
-                if ~play_once
-                    set(main.instr_panel.h_play, 'CData', fn_get_cdata_for_named_icon(icons, 'play'));
-                end
-                return
             end
             repeat = 1;
-            while (get(main.instr_panel.h_play, 'value') & ~play_once) | (repeat & play_once)
+            while repeat
                 set(main.status_image.title, 'String', {...
                     ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
                     'Waiting for data ...', ...
                     fps_string});
-                exp_data = available_instruments(setup.current_instr).fn_instr_acquire(main.instr_panel.fn_get_data());
+                exp_data = available_instruments(setup.current_instr).fn_instr_acquire(instr_control_data);
+                %Stop it repeating if play button is no longer pressed or
+                %it was 'play once' anyway. This is deliberately placed
+                %after fn_instr_acquire so that the last call to
+                %fn_instr_acquire will be with play_button_state = 0. This
+                %is to enable instruments that do not run  in slave mode (e.g.
+                %AOS devices) to stop their signal generators when the last
+                %frame is acquired. For other instruments it makes no
+                %difference. PW 20/11/20
+                instr_control_data.play_button_state = get(main.instr_panel.h_play, 'value');
+                if play_once || ~instr_control_data.play_button_state
+                    repeat = 0;
+                    set(main.instr_panel.h_play, 'CData', fn_get_cdata_for_named_icon(icons, 'play'));
+                end
                 if ~isempty(exp_data)
-                    if ~isempty(time_of_last_frame) &~play_once
+                    if ~isempty(time_of_last_frame) && ~play_once
                         fps = 1 / toc(time_of_last_frame);
-                        if fps > 1;
+                        if fps > 1
                             fps_string = sprintf('Frames/second: %.2f ', fps);
                         else
                             fps_string = sprintf('Seconds/frame: %.2f ', 1 / fps);
-                        end;
+                        end
                     else
                         fps_string = '';
-                    end;
+                    end
                     time_of_last_frame = tic;
                     set(main.status_image.title, 'String', {...
                         ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
                         'Waiting for data ... done', ...
                         fps_string});
                     if setup.current_instr > 1
-                        exp_data.ph_velocity = ph_velocity;
-                        if ~isempty(vel_poly)
-                            exp_data.vel_poly = vel_poly;
-                        end;
+                        exp_data.material = material;
                         exp_data.array = array;
                     end
                     fn_update;
@@ -758,13 +743,12 @@ callbacks_disabled = 0;
                     %if array or material not set, stop play
                     set(main.instr_panel.h_play, 'value', 0);
                 end
-                if play_once
-                    repeat = 0;
-                    set(main.status_image.title, 'String', {...
-                        ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
-                        'Stopped', ' '});
-                end
             end
+            %set status back to stopped
+            set(main.status_image.title, 'String', {...
+                ['Connected to ', available_instruments(setup.current_instr).instr_info.name], ...
+                'Stopped', ' '});
+
         catch
             %just in case window is closing
         end
@@ -781,14 +765,14 @@ callbacks_disabled = 0;
         if data_is_from_file && ~callbacks_disabled
             b = questdlg('Ignore material in file?','Material','Yes', 'No', 'Yes');
             if strcmp(b, 'No')
-                return;
+                return
             end
         end
         
         if mi == length(get(main.instr_panel.h_material, 'String'))
             [matl, fname] = fn_input_new_material_details(fullfile(local_folder, config.files.local_brain_path, config.files.materials_path));
             if isempty(matl)
-                return;
+                return
             end
             jj = length(available_materials) + 1;
             available_materials(jj).material = matl;
@@ -800,10 +784,7 @@ callbacks_disabled = 0;
         set(main.instr_panel.h_material, 'value', mi);
         callbacks_disabled = 0;
         if data_is_from_file
-            exp_data.ph_velocity = available_materials(setup.current_matl).material.ph_velocity;
-            if isfield(available_materials(setup.current_matl).material, 'vel_poly')
-                exp_data.vel_poly = available_materials(setup.current_matl).material.vel_poly;
-            end
+            exp_data.material = available_materials(setup.current_matl).material;
         end
     end
 
@@ -813,7 +794,7 @@ callbacks_disabled = 0;
         if mi == length(get(main.instr_panel.h_array, 'String'))
             [array, fname] = fn_input_new_array_details(fullfile(local_folder, config.files.local_brain_path, config.files.arrays_path));
             if isempty(array)
-                return;
+                return
             end
             jj = length(available_arrays) + 1;
             available_arrays(jj).array = array;
@@ -839,23 +820,20 @@ callbacks_disabled = 0;
         end
     end
 
-    function [ph_velocity, vel_poly] = fn_get_ph_velocity
+    function material = fn_get_material
         mi = get(main.instr_panel.h_material, 'value');
         %check it is a real matl - first item in list is no selection and
         %last item is create new material
-        ph_velocity = [];
-        vel_poly = [];
+        material = [];
         if mi > 1 & mi < length(get(main.instr_panel.h_material, 'String'));
-            ph_velocity = available_materials(mi).material.ph_velocity;
-            if isfield(available_materials(mi).material, 'vel_poly')
-                vel_poly = available_materials(mi).material.vel_poly;
-            end
+            material = available_materials(mi).material;
         else
             if setup.current_instr > 1
                 warndlg('Must select material first','Warning')
             end
         end
     end
+
 
     function fn_update
         %this is executed whenever new exp_data is loaded or acquired
@@ -874,7 +852,7 @@ callbacks_disabled = 0;
                 min_time = 0;
             else
                 min_time = ops.select(1,1);
-            end;
+            end
             jj = min(find(exp_data.time > min_time));
             if ~isempty(jj)
                 amp(sub2ind([n, n], exp_data.rx, exp_data.tx)) = max(abs(exp_data.time_data(jj:end, :)));
@@ -1001,9 +979,11 @@ callbacks_disabled = 0;
         if config.general.save_last_setup
             save(fullfile(local_folder, config.files.local_brain_path, config.files.setups_path, config.files.last_setup_file), 'setup');
         end
-        %finally change back to directory from which gui_main_window was called
+        %finally change back to directory from which gui_main_window was
+        %called and reset path to what it was before
         if ~isdeployed
             cd(current_dir_when_brain_started);
+            path(old_path);
         end
     end
 
@@ -1022,16 +1002,18 @@ callbacks_disabled = 0;
         else
             was_playing = 0;
         end
-        available_instruments(setup.current_instr).fn_send_instr_options(ops, no_els);
+        available_instruments(setup.current_instr).fn_send_instr_options(ops, array, material);
         if was_playing
             set(main.instr_panel.h_play, 'value', 1);
         end
     end
 end
 
+
 function fname = fn_save_file(exp_data, setup, folder)
 filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.ndt'; filter{2,2} = 'Setup file (*.ndt)';
+filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file (*.mfmc)';
+filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
 [fname, pathname, filterindex] = uiputfile(filter, 'Save', [folder, filesep]);
 if ~ischar(fname)
     %nothing selected
@@ -1039,29 +1021,82 @@ if ~ischar(fname)
     return;
 end
 switch filterindex
-    case 1
+    case 1 %UoB Matlab format
         %prevent save without array or material data
         if ~isfield(exp_data, 'array')
             warndlg('Select array first','Warning')
             return;
-        end;
-        if ~isfield(exp_data, 'ph_velocity')
+        end
+        if ~isfield(exp_data, 'material')
             warndlg('Select material first','Warning')
             return;
-        end;
+        end
+        f = msgbox('Saving to Matlab file');
         save([pathname, fname], 'exp_data');
-    case 2
+        delete(f);
+        
+    case 2 %MFMC hdf5 format
+        %if file exists there is option to add to existing sequence or
+        %create new one
+        new_seq = 1;
+        if exist(fullfile(pathname, fname), 'file') == 2
+            %find datasets in existing file and ask user to select one to
+            %add to or create new one
+            MFMC = fn_MFMC_open_file(fullfile(pathname, fname), [], 1); %opens file only, does not create sequence ye
+            [PROBE, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC); %returns sequences in file
+            seq = {};
+            seq{1} = 'New sequence';
+            for ii = 1:length(SEQUENCE)
+                seq{ii + 1} = SEQUENCE{ii}.location;
+            end
+            
+            [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
+            if indx ~= 1
+                %this is case of adding frame to existing sequence in
+                %existing file
+                new_seq = 0;
+                SEQUENCE = SEQUENCE{indx - 1};
+            end
+        end
+        
+        %open/create file and add new sequence if necessary
+        if new_seq
+            MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
+
+            %need to create SEQUENCE and PROBE
+            PROBE = fn_MFMC_helper_brain_array_to_probe(exp_data.array);
+            PROBE = fn_MFMC_helper_add_probe_if_new(MFMC, PROBE);
+            SEQUENCE = fn_MFMC_helper_brain_exp_data_to_sequence(exp_data, PROBE);
+            
+            %ask user for name of dataset to create
+            seq = inputdlg('Sequence (leave blank for default)', 'MFMC sequence', [1, 30]);
+            if ~isempty(seq{1})
+                SEQUENCE.name = seq{1};
+            end
+            f = msgbox('Writing new sequence to MFMC file');
+            tic
+            SEQUENCE = fn_MFMC_add_sequence(MFMC, SEQUENCE);
+            toc
+            delete(f);
+        end
+        
+        %add frame to sequence
+        f = msgbox('Adding frame to sequence in MFMC file');
+        SEQUENCE = fn_MFMC_helper_brain_exp_data_to_frame(exp_data, MFMC, SEQUENCE, [], [], 4); %last argument is compression
+        delete(f);
+    case 3
         save([pathname, fname], 'setup');
 end
-fname =fullfile(pathname, fname);
+fname = fullfile(pathname, fname);
 end
 
 function [exp_data, setup, exp_data_fname] = fn_load_file(folder, array_folder)
 exp_data_fname = [];%only set if exp_data file is loaded
 filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.ndt'; filter{2,2} = 'Setup file (*.ndt)';
-filter{3,1} = '*.png'; filter{3,2} = 'Diagnostic sonar file (*.png)';
-filter{4,1} = '*.txt'; filter{4,2} = 'M2M CIVA file (*.txt)';
+filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file(*.mfmc)';
+filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
+filter{4,1} = '*.png'; filter{4,2} = 'Diagnostic sonar file (*.png)';
+filter{5,1} = '*.txt'; filter{5,2} = 'M2M CIVA file (*.txt)';
 
 [fname, pathname, filterindex] = uigetfile(filter, 'Load', folder);
 
@@ -1074,11 +1109,40 @@ if ~ischar(fname)
 end
 
 if strcmp(fname(end-2:end),'png')==1
-    exp_data=fn_ds_convert([pathname, fname(1:end-4)]);
+    exp_data = fn_ds_convert([pathname, fname(1:end-4)]);
 elseif strcmp(fname(end-2:end),'txt')==1
-    exp_data=fn_m2m_convert([pathname, fname(1:end-4)]);
+    exp_data = fn_m2m_convert([pathname, fname(1:end-4)]);
+elseif strcmp(fname(end-3:end),'mfmc')==1
+    MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
+    [~, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC);
+    frame_ind = [];
+    seq_loc = [];
+    if length(SEQUENCE) > 1 %select which sequence in file to use
+        seq = {};
+        for ii = 1:length(SEQUENCE)
+            seq{ii} = SEQUENCE{ii}.location;
+        end
+        [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
+        seq_loc = SEQUENCE{indx}.location;
+        no_frames = fn_MFMC_get_no_frames(MFMC, seq_loc);
+        if no_frames > 1
+            answer = inputdlg(sprintf('Frame (1 to %i):', no_frames), 'MFMC');
+            if isnumeric(answer{1})
+                frame_ind = round(str2num(answer));
+                frame_ind = max(frame_ind, 1);
+                frame_ind = min(frame_ind, no_frames);
+            else
+                frame_ind = no_frames;
+            end
+        end
+    end
+    f = msgbox('Reading frame from MFMC file');
+    exp_data = fn_MFMC_helper_frame_to_brain_exp_data(MFMC, seq_loc, frame_ind);
+    delete(f)
 else
+    f = msgbox('Loading Matlab file');
     load([pathname, fname], '-mat');
+    delete(f);
      
     if exist('Trans')
        [exp_data]=fn_verasonics_convert(Trans, Receive, RcvData);

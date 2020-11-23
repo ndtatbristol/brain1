@@ -1,0 +1,2185 @@
+[Root]
+VersionDriverOEMPA=1.2.0.1
+CycleCount=64
+FMCElementStart=0
+FMCElementStop=63
+EnableFMC=1
+DisableUSB3=1
+AscanBitSize=8Bits
+
+[Cycle:0]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:0\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=0
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:0\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=0
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:1]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:1\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=1
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:1\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=1
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:2]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:2\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=2
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:2\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=2
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:3]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:3\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=3
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:3\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=3
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:4]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:4\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=4
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:4\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=4
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:5]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:5\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=5
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:5\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=5
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:6]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:6\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=6
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:6\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=6
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:7]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:7\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=7
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:7\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=7
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:8]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:8\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=8
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:8\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=8
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:9]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:9\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=9
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:9\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=9
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:10]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:10\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=10
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:10\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=10
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:11]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:11\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=11
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:11\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=11
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:12]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:12\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=12
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:12\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=12
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:13]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:13\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=13
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:13\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=13
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:14]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:14\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=14
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:14\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=14
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:15]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:15\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=15
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:15\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=15
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:16]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:16\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=16
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:16\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=16
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:17]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:17\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=17
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:17\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=17
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:18]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:18\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=18
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:18\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=18
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:19]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:19\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=19
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:19\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=19
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:20]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:20\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=20
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:20\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=20
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:21]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:21\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=21
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:21\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=21
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:22]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:22\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=22
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:22\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=22
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:23]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:23\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=23
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:23\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=23
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:24]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:24\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=24
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:24\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=24
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:25]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:25\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=25
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:25\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=25
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:26]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:26\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=26
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:26\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=26
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:27]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:27\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=27
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:27\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=27
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:28]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:28\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=28
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:28\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=28
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:29]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:29\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=29
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:29\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=29
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:30]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:30\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=30
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:30\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=30
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:31]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:31\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=31
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:31\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=31
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:32]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:32\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=32
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:32\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=32
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:33]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:33\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=33
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:33\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=33
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:34]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:34\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=34
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:34\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=34
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:35]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:35\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=35
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:35\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=35
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:36]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:36\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=36
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:36\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=36
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:37]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:37\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=37
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:37\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=37
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:38]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:38\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=38
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:38\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=38
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:39]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:39\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=39
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:39\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=39
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:40]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:40\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=40
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:40\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=40
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:41]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:41\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=41
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:41\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=41
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:42]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:42\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=42
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:42\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=42
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:43]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:43\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=43
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:43\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=43
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:44]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:44\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=44
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:44\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=44
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:45]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:45\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=45
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:45\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=45
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:46]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:46\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=46
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:46\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=46
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:47]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:47\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=47
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:47\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=47
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:48]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:48\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=48
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:48\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=48
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:49]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:49\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=49
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:49\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=49
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:50]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:50\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=50
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:50\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=50
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:51]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:51\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=51
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:51\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=51
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:52]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:52\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=52
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:52\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=52
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:53]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:53\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=53
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:53\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=53
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:54]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:54\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=54
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:54\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=54
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:55]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:55\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=55
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:55\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=55
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:56]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:56\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=56
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:56\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=56
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:57]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:57\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=57
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:57\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=57
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:58]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:58\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=58
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:58\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=58
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:59]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:59\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=59
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:59\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=59
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:60]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:60\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=60
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:60\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=60
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:61]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:61\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=61
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:61\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=61
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:62]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:62\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=62
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:62\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=62
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+
+[Cycle:63]
+GainDigital=10.000000 dB
+BeamCorrection=0.0 dB
+Start=0.000000 us
+Range=20.000000 us
+TimeSlot=1024.0 us
+PointFactor=2
+CompressionType=Decimation
+Rectification=Signed
+FilterIndex=1
+GainAnalog=5.000000 dB
+GateCount=0
+
+[Cycle:63\Pulser]
+WedgeDelay=0.00 us
+Element.count=1
+Element=63
+Delay.count=1;1
+Delay=0.00 us
+Width.count=1
+Width=0.05 us
+
+[Cycle:63\Receiver]
+WedgeDelay=0.00 us
+Element.count=1
+Element=63
+Focusing=Standard
+Delay.count=1;1
+Delay=0.00 us
+Gain.count=1
+Gain=0.0 dB
+FocalTimeOfFlight.count=1
+FocalTimeOfFlight=0.0 us
+

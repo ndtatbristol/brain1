@@ -60,6 +60,16 @@ else
     use_gpu_if_available = 1;
 end
 
+if (use_gpu_if_available < 1 || ~((exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)))
+    switch focal_law.interpolation_method
+        case {'lanczos2','lanczos3'}
+            disp('WARNING: Lanczos interpolation not available for CPU. Defaulting to linear interpolation');
+            focal_law.interpolation_method='linear';
+        otherwise
+            % do nothing
+    end
+end
+
 if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0)
     if ~isfield(focal_law, 'tt_ind')
         focal_law.tt_ind = 1:length(exp_data.tx);
@@ -122,7 +132,25 @@ if use_gpu_if_available && (exist('gpuDeviceCount') == 2) && (gpuDeviceCount > 0
             result = fn_tfm_gpu_linear_arb_2dly(exp_data,focal_law);
         case 'Different Tx and RX laws, HMC data (linear)'
             result = fn_tfm_gpu_linear_arb_2dly_hmc(exp_data,focal_law);
+        
+            %Lanczos interpolation methods
+        
+        case 'Same Tx and RX laws (lanczos2)'
+            result = fn_tfm_gpu_lanczos2_arb(exp_data,focal_law,2);    
+        case 'Different Tx and RX laws, FMC data (lanczos2)'
+            %Separate focal laws for Tx and Rx and FMC data
+            result = fn_tfm_gpu_lanczos2_arb_2dly(exp_data,focal_law,2);
+        case 'Different Tx and RX laws, HMC data (lanczos2)'
+            result = fn_tfm_gpu_lanczos2_arb_2dly_hmc(exp_data,focal_law,2);
             
+        case 'Same Tx and RX laws (lanczos3)'
+            result = fn_tfm_gpu_lanczos2_arb(exp_data,focal_law,3);
+        case 'Different Tx and RX laws, FMC data (lanczos3)'
+            %Separate focal laws for Tx and Rx and FMC data
+            result = fn_tfm_gpu_lanczos2_arb_2dly(exp_data,focal_law,3);
+        case 'Different Tx and RX laws, HMC data (lanczos3)'
+            result = fn_tfm_gpu_lanczos2_arb_2dly_hmc(exp_data,focal_law,3); 
+        
     end
     
 else
@@ -148,17 +176,21 @@ else
     if isfield(focal_law, 'lookup_time')
         sep_tx_rx_laws = 0;
         focal_law.lookup_time = reshape(focal_law.lookup_time, prod(result_dims), []);
-        focal_law.lookup_ind = reshape(focal_law.lookup_ind, prod(result_dims), []);
+        if isfield(focal_law,'lookup_ind')
+            focal_law.lookup_ind = reshape(focal_law.lookup_ind, prod(result_dims), []);
+        end
         focal_law.lookup_amp = reshape(focal_law.lookup_amp, prod(result_dims), []);
     else
         sep_tx_rx_laws = 1;
+        if (isfield(focal_law,'lookup_ind_rx') && isfield(focal_law,'lookup_ind_tx'))
+            focal_law.lookup_ind_tx = reshape(focal_law.lookup_ind_tx, prod(result_dims), []);
+            focal_law.lookup_ind_rx = reshape(focal_law.lookup_ind_rx, prod(result_dims), []);
+        end
         focal_law.lookup_time_tx = reshape(focal_law.lookup_time_tx, prod(result_dims), []);
-        focal_law.lookup_ind_tx = reshape(focal_law.lookup_ind_tx, prod(result_dims), []);
         focal_law.lookup_amp_tx = reshape(focal_law.lookup_amp_tx, prod(result_dims), []);
         focal_law.lookup_time_rx = reshape(focal_law.lookup_time_rx, prod(result_dims), []);
-        focal_law.lookup_ind_rx = reshape(focal_law.lookup_ind_rx, prod(result_dims), []);
         focal_law.lookup_amp_rx = reshape(focal_law.lookup_amp_rx, prod(result_dims), []);
-    end;
+    end
     
     % if ~focal_law.amp_on
     %     if sep_tx_rx_laws

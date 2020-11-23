@@ -131,13 +131,13 @@ big_inv_s = [];
             exp_data.time_data = exp_data.time_data * big_inv_s;
         end
         exp_data.array=array;
-        exp_data.time=exp_data.time-options.instrument_delay.*1e-9;
+        exp_data.time=exp_data.time-options.instrument_delay.*1e-9-((1./(options.pulse_freq*1e6)).*(options.pulse_width/2));
         if options.gate_start<0
             exp_data.time=exp_data.time+options.gate_start;
         end
     end
 
-    function fn_send_options(options, no_channels)
+    function fn_send_options(options, array, material)
         TX=[];
         Event=[];
         Receive=[];
@@ -146,6 +146,7 @@ big_inv_s = [];
         if ~connected
             return;
         end
+        no_channels = length(array.el_xc(:));
         switch options.acquire_mode
             case 'FMC'
                 hadamard_excite = 0;

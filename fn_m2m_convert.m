@@ -1,4 +1,4 @@
-function exp_data=fn_m2m_convert(fname, varargin);
+function exp_data=fn_m2m_convert(fname, varargin)
 
 %==========================================================================
 % civa2mat function:
@@ -12,13 +12,16 @@ function exp_data=fn_m2m_convert(fname, varargin);
 % version : v1 (english/ only FMC conversion 24/01/2015)
 % Dernière mise à jour : 17/06/2010
 %==========================================================================
+%Modified by PDW so fname argument should now include extension rather than
+%adding .txt extension within this function (11/9/19)
+
 if nargin<2
     gap=11;
 else
     gap=varargin{1};
 end
 
-fname=[fname '.txt'];
+% fname=[fname '.txt'];
 %[FILENAME, PATHNAME] = uigetfile('*.txt','Select the FMC data in .txt format');
 chemin1 = char(fname);
 

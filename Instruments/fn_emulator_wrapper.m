@@ -4,7 +4,7 @@ file_exp_data = [];
 exp_data = [];
 mean_level = 0;
 sample_bits = 16;
-rel_noise_level = 1;
+rel_noise_level = 0.1;
 pause_length = 0;%0.5;
 send_settings_pause = 0;%1;
 
@@ -29,8 +29,8 @@ info.options_info.acquire_mode.type = 'constrained';
 info.options_info.acquire_mode.constraint = {'SAFT', 'FMC', 'HMC', 'CSM'};
 
 info.options_info.rel_noise.label = 'Relative noise level';
-info.options_info.rel_noise.default = 1;
-info.options_info.rel_noise.multiplier = 1;
+info.options_info.rel_noise.default = 0.1;
+info.options_info.rel_noise.multiplier = 0.1;
 info.options_info.rel_noise.type = 'double';
 info.options_info.rel_noise.constraint = [0, 1000];
 
@@ -44,11 +44,11 @@ info.options_info.sample_bits.default = '16';
 info.options_info.sample_bits.type = 'constrained';
 info.options_info.sample_bits.constraint = {'1', '2', '4', '8', '12', '16'};
 
-info.options_info.gate_start.label = 'Time start (us)';
-info.options_info.gate_start.default = 0;
-info.options_info.gate_start.type = 'double';
-info.options_info.gate_start.constraint = [0, 1e3];
-info.options_info.gate_start.multiplier = 1;
+info.options_info.time_start.label = 'Time start (us)';
+info.options_info.time_start.default = 0;
+info.options_info.time_start.type = 'double';
+info.options_info.time_start.constraint = [0, 1e-3];
+info.options_info.time_start.multiplier = 1e-6;
 
 h_fn_acquire = @fn_acquire;
 h_fn_send_options = @fn_send_options;
@@ -84,7 +84,7 @@ options_sent = 0;
         end
     end
 
-    function fn_send_options(options, no_channels)
+    function fn_send_options(options, array, material)
         if ~connected
             return;
         end
@@ -93,7 +93,6 @@ options_sent = 0;
         tmp = load(fullfile('Instruments', 'Emulator data', options.fname));
         
         file_exp_data = tmp.exp_data;
-%         options.time_pts = length(file_exp_data.time);
         
         %generate FMC data set - NB, data in these files must be either FMC
         %or HMC (not CSM or SAFT)
@@ -136,12 +135,17 @@ options_sent = 0;
                 exp_data.time_data = zeros(length(exp_data.time), length(unique_rx));
                 for ii = 1:length(unique_rx)
                     exp_data.time_data(:,ii) = sum(file_exp_data.time_data(:, find(file_exp_data.rx == unique_rx(ii))), 2);
-                end;
+                end
         end
         rel_noise_level = options.rel_noise;
         if options.time_pts < length(exp_data.time)
             exp_data.time_data = exp_data.time_data(1:options.time_pts, :);
             exp_data.time = exp_data.time(1:options.time_pts);
+        end
+        if options.time_start > exp_data.time(1) && options.time_start < exp_data.time(end)
+            [~, ti] = min(abs(exp_data.time - options.time_start));
+            exp_data.time_data = exp_data.time_data(ti:end, :);
+            exp_data.time = exp_data.time(ti:end);
         end
         options_sent = 1;
     end
