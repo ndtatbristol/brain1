@@ -191,8 +191,8 @@ deviceId = [];
         
 %         options.sample_freq  = 100e6;
         options.sample_bits = str2double(options.sample_bits);
-        fn_write_file_explorer ('test',no_channels,options.sample_bits,options.gate_start * 1e6, options.time_pts / str2double(options.sample_freq) , options.db_gain, options.pulse_width * 1e6,str2double(options.sample_freq)*1e6);                                
-                                
+        fn_write_file_explorer ('test', options.aos_driver_path,no_channels, options.sample_bits, options.gate_start * 1e6, options.time_pts / str2double(options.sample_freq) , options.db_gain, options.pulse_width * 1e6, str2double(options.sample_freq)*1e6);                                                                
+%         fn_write_file_explorer ('test',no_channels,options.sample_bits,options.gate_start * 1e6, options.time_pts / str2double(options.sample_freq) , options.db_gain, options.pulse_width * 1e6,str2double(options.sample_freq)*1e6);                                
         tmp = meshgrid([1:no_channels],[1:no_channels]);
         tx_no = reshape(tmp,[1 no_channels.^2]);
         rx_no = repmat([1:no_channels],1,no_channels);

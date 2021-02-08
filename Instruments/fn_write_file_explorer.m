@@ -1,4 +1,4 @@
-function fn_write_file_explorer(name,cycles,sample_bit,Start,Range,gain,Width,sample_frequency)
+function fn_write_file_explorer(name,driver_path,cycles,sample_bit,Start,Range,gain,Width,sample_frequency)
 % filedir = cd;
 fid = fopen([name,'.txt'],'w+t');
 %% inputs
@@ -35,9 +35,14 @@ Gaincount=1;
 Gain=0;
 FocalTimeOfFlightcount=1;
 FocalTimeOfFlight=0.0;
+
+i = findstr(driver_path, ' '); 
+i = i(end);
+driver_version = driver_path(i+1:end);
+
 %% Write text
 fprintf(fid,'[Root]\n');
-fprintf(fid,'VersionDriverOEMPA=1.2.0.1\n');
+fprintf(fid,['VersionDriverOEMPA=',driver_version,'\n']);
 fprintf(fid,['CycleCount=%2.0f\n','FMCElementStart=%1.0f\n'...
     'FMCElementStop=%2.0f\n','EnableFMC=%1.0f\n',...
     'DisableUSB3=%1.0f\n','AscanBitSize=%1.0fBits\n\n'],cycles,element_start,element_stop...
