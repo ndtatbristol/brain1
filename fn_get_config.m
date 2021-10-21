@@ -40,7 +40,7 @@ save_filter{3,1} = '*.ndt'; save_filter{3,2} = 'Setup file (*.ndt)';
 % load_filter{2,1} = '*.mat'; load_filter{2,2} = 'Array data file (*.mat)';
 % save_filter{1,1} = '*.mfmc'; save_filter{1,2} = 'MFMC format data file (*.mfmc)';
 % save_filter{2,1} = '*.mat'; save_filter{2,2} = 'Array data file (*.mat)';
-config.default_setup.data_folder = 'C:\Users\mepdw\OneDrive - University of Bristol\Desktop';
+% config.default_setup.data_folder = 'C:\Users\mepdw\OneDrive - University of Bristol\Desktop';
 
 
 config.files.local_brain_path = 'Brain (local data)';
