@@ -68,7 +68,7 @@ else
     use_gpu_if_available = 1;
 end
 
-use_gpu = use_gpu_if_available && fn_check_for_gpu;
+use_gpu = use_gpu_if_available && fn_test_if_gpu_present_and_working;
 
 if  ~use_gpu && (strcmp(focal_law.interpolation_method, 'lanczos2') || strcmp(focal_law.interpolation_method, 'lanczos3'))
     warning('Lanczos interpolation not available for CPU. Defaulting to linear interpolation');

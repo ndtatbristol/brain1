@@ -28,7 +28,7 @@ end
 default_options.angle_dep_vel = 0;
 default_options.angle_limit = 0;
 default_options.interpolation_method = 'linear';
-default_options.load_kernel = 1;
+default_options.load_kernel = 0;
 default_options.angle_limit_window = 'rectangular'; %options are 'hanning' or 'rectangular' for a hard edge window
 default_options.weighting = 'none';%options are 'resolution', 'detection' or 'none';
 default_options.aperture_weight_correction = 'weights';

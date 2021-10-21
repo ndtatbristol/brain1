@@ -218,45 +218,6 @@ info.options_info.size3.type = 'double';
 info.options_info.size3.constraint = [0, max(exp_data.array.el_xc) - min(exp_data.array.el_xc)];
 info.options_info.size3.multiplier = 1e-3;
 
-
-
-% info.options_info.el_max1.label = 'A-scan 1 last element';
-% info.options_info.el_max1.default = default_aperture;
-% info.options_info.el_max1.type = 'int';
-% info.options_info.el_max1.constraint = [1, length(exp_data.array.el_xc)];
-
-%2nd A-scan
-% info.options_info.el_min2.label = 'A-scan 2 first element';
-% info.options_info.el_min2.default = round((length(exp_data.array.el_xc) - default_aperture) / 2);
-% info.options_info.el_min2.type = 'int';
-% info.options_info.el_min2.constraint = [1, length(exp_data.array.el_xc)];
-% 
-% info.options_info.el_step2.label = 'A-scan 2 element step';
-% info.options_info.el_step2.default = default_step;
-% info.options_info.el_step2.type = 'int';
-% info.options_info.el_step2.constraint = [1, length(exp_data.array.el_xc)];
-% 
-% info.options_info.el_max2.label = 'A-scan 2 last element';
-% info.options_info.el_max2.default = round((length(exp_data.array.el_xc) - default_aperture) / 2) + default_aperture - 1;
-% info.options_info.el_max2.type = 'int';
-% info.options_info.el_max2.constraint = [1, length(exp_data.array.el_xc)];
-% 
-% %3rd A-scan
-% info.options_info.el_min3.label = 'A-scan 3 first element';
-% info.options_info.el_min3.default = length(exp_data.array.el_xc) - default_aperture + 1;
-% info.options_info.el_min3.type = 'int';
-% info.options_info.el_min3.constraint = [1, length(exp_data.array.el_xc)];
-% 
-% info.options_info.el_step3.label = 'A-scan 3 element step';
-% info.options_info.el_step3.default = default_step;
-% info.options_info.el_step3.type = 'int';
-% info.options_info.el_step3.constraint = [1, length(exp_data.array.el_xc)];
-% 
-% info.options_info.el_max3.label = 'A-scan 3 last element';
-% info.options_info.el_max3.default = length(exp_data.array.el_xc);
-% info.options_info.el_max3.type = 'int';
-% info.options_info.el_max3.constraint = [1, length(exp_data.array.el_xc)];
-
 info.options_info.filter_on.label = 'Filter';
 info.options_info.filter_on.type = 'bool';
 info.options_info.filter_on.constraint = {'On', 'Off'};

@@ -86,6 +86,7 @@ end
 
 %normalise by number of time traces corresponding to each pixel
 focal_law.lookup_amp = focal_law.lookup_amp ./ sum(focal_law.lookup_amp, n + 1);
+focal_law.lookup_amp(isnan(focal_law.lookup_amp)) = 0;
 
 
 focal_law.filter_on = 0;

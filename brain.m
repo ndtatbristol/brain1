@@ -504,7 +504,16 @@ callbacks_disabled = 0;
     end
 
     function fn_load
-        [tmp_exp_data, tmp_options, exp_data_fname] = fn_load_file(setup.data_folder, fullfile(local_folder, config.files.local_brain_path, config.files.arrays_path));
+        [tmp_exp_data, tmp_options, exp_data_fname] = fn_load_file(setup.data_folder, fullfile(local_folder, config.files.local_brain_path, config.files.arrays_path), config.files.load_filter);
+        
+        if isempty(exp_data_fname)
+            return
+        end
+        %create original_material field to preserve material originally in exp_data
+        %so that it can be used if 'From material file' option is selected for velocity
+		options_with_precalcs.original_material = fn_material_from_exp_data(tmp_exp_data);
+        tmp_exp_data.material = options_with_precalcs.original_material;
+        
         if ~isempty(exp_data_fname)
             setup.data_folder = fileparts(exp_data_fname);
         end
@@ -536,7 +545,7 @@ callbacks_disabled = 0;
 
     function fn_save
         fn_update_setup_variable;
-        fname = fn_save_file(exp_data, setup, setup.data_folder);
+        fname = fn_save_file(exp_data, setup, setup.data_folder, config.files.save_filter);
         if ~isempty(fname)
             setup.data_folder = fileparts(fname);
         end
@@ -811,7 +820,7 @@ callbacks_disabled = 0;
         ai = get(main.instr_panel.h_array, 'value');
         %check it is a real array - first item in list is no selection
         array = [];
-        if ai > 1
+        if ai > 1 && ai <= length(available_arrays)
             array = available_arrays(ai).array;
         else
             if setup.current_instr > 1
@@ -1010,18 +1019,16 @@ callbacks_disabled = 0;
 end
 
 
-function fname = fn_save_file(exp_data, setup, folder)
-filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file (*.mfmc)';
-filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
-[fname, pathname, filterindex] = uiputfile(filter, 'Save', [folder, filesep]);
+function fname = fn_save_file(exp_data, setup, folder, save_filter)
+
+[fname, pathname, filterindex] = uiputfile(save_filter, 'Save', [folder, filesep]);
 if ~ischar(fname)
     %nothing selected
     fname = [];
     return;
 end
-switch filterindex
-    case 1 %UoB Matlab format
+switch save_filter{filterindex, 1}
+    case '*.mat' %UoB Matlab format
         %prevent save without array or material data
         if ~isfield(exp_data, 'array')
             warndlg('Select array first','Warning')
@@ -1035,7 +1042,7 @@ switch filterindex
         save([pathname, fname], 'exp_data');
         delete(f);
         
-    case 2 %MFMC hdf5 format
+    case '*.mfmc' %MFMC hdf5 format
         %if file exists there is option to add to existing sequence or
         %create new one
         new_seq = 1;
@@ -1084,21 +1091,22 @@ switch filterindex
         f = msgbox('Adding frame to sequence in MFMC file');
         SEQUENCE = fn_MFMC_helper_brain_exp_data_to_frame(exp_data, MFMC, SEQUENCE, [], [], 4); %last argument is compression
         delete(f);
-    case 3
+    case '*.ndt'
         save([pathname, fname], 'setup');
 end
 fname = fullfile(pathname, fname);
 end
 
-function [exp_data, setup, exp_data_fname] = fn_load_file(folder, array_folder)
-exp_data_fname = [];%only set if exp_data file is loaded
-filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
-filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file(*.mfmc)';
-filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
-filter{4,1} = '*.png'; filter{4,2} = 'Diagnostic sonar file (*.png)';
-filter{5,1} = '*.txt'; filter{5,2} = 'M2M CIVA file (*.txt)';
+function [exp_data, setup, exp_data_fname] = fn_load_file(folder, array_folder, load_filter)
 
-[fname, pathname, filterindex] = uigetfile(filter, 'Load', folder);
+exp_data_fname = [];%only set if exp_data file is loaded
+% filter{1,1} = '*.mat'; filter{1,2} = 'Array data file (*.mat)';
+% filter{2,1} = '*.mfmc'; filter{2,2} = 'MFMC format data file(*.mfmc)';
+% filter{3,1} = '*.ndt'; filter{3,2} = 'Setup file (*.ndt)';
+% filter{4,1} = '*.png'; filter{4,2} = 'Diagnostic sonar file (*.png)';
+% filter{5,1} = '*.txt'; filter{5,2} = 'M2M CIVA file (*.txt)';
+
+[fname, pathname, filterindex] = uigetfile(load_filter, 'Load', folder);
 
 if ~ischar(fname)
     %nothing selected
@@ -1108,45 +1116,46 @@ if ~ischar(fname)
     return;
 end
 
-if strcmp(fname(end-2:end),'png')==1
-    exp_data = fn_ds_convert([pathname, fname(1:end-4)]);
-elseif strcmp(fname(end-2:end),'txt')==1
-    exp_data = fn_m2m_convert([pathname, fname(1:end-4)]);
-elseif strcmp(fname(end-3:end),'mfmc')==1
-    MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
-    [~, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC);
-    frame_ind = [];
-    seq_loc = [];
-    if length(SEQUENCE) > 1 %select which sequence in file to use
-        seq = {};
-        for ii = 1:length(SEQUENCE)
-            seq{ii} = SEQUENCE{ii}.location;
-        end
-        [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
-        seq_loc = SEQUENCE{indx}.location;
-        no_frames = fn_MFMC_get_no_frames(MFMC, seq_loc);
-        if no_frames > 1
-            answer = inputdlg(sprintf('Frame (1 to %i):', no_frames), 'MFMC');
-            if isnumeric(answer{1})
-                frame_ind = round(str2num(answer));
-                frame_ind = max(frame_ind, 1);
-                frame_ind = min(frame_ind, no_frames);
-            else
-                frame_ind = no_frames;
+[~,~,ext] = fileparts(fname)
+switch ext
+    case '.png'
+        exp_data = fn_ds_convert([pathname, fname(1:end-4)]);
+    case '.txt'
+        exp_data = fn_m2m_convert([pathname, fname(1:end-4)]);
+    case '.mfmc'
+        MFMC = fn_MFMC_open_file(fullfile(pathname, fname));
+        [~, SEQUENCE] = fn_MFMC_get_probe_and_sequence_refs(MFMC);
+        frame_ind = [];
+        seq_loc = [];
+        if length(SEQUENCE) > 1 %select which sequence in file to use
+            seq = {};
+            for ii = 1:length(SEQUENCE)
+                seq{ii} = SEQUENCE{ii}.location;
+            end
+            [indx, tf] = listdlg('ListString', seq, 'SelectionMode', 'single', 'Name', 'MFMC sequence');
+            seq_loc = SEQUENCE{indx}.location;
+            no_frames = fn_MFMC_get_no_frames(MFMC, seq_loc);
+            if no_frames > 1
+                answer = inputdlg(sprintf('Frame (1 to %i):', no_frames), 'MFMC');
+                if isnumeric(answer{1})
+                    frame_ind = round(str2num(answer));
+                    frame_ind = max(frame_ind, 1);
+                    frame_ind = min(frame_ind, no_frames);
+                else
+                    frame_ind = no_frames;
+                end
             end
         end
-    end
-    f = msgbox('Reading frame from MFMC file');
-    exp_data = fn_MFMC_helper_frame_to_brain_exp_data(MFMC, seq_loc, frame_ind);
-    delete(f)
-else
-    f = msgbox('Loading Matlab file');
-    load([pathname, fname], '-mat');
-    delete(f);
-     
-    if exist('Trans')
-       [exp_data]=fn_verasonics_convert(Trans, Receive, RcvData);
-    end
+        f = msgbox('Reading frame from MFMC file');
+        exp_data = fn_MFMC_helper_frame_to_brain_exp_data(MFMC, seq_loc, frame_ind);
+        delete(f)
+    otherwise
+        f = msgbox('Loading Matlab file');
+        load([pathname, fname], '-mat');
+        delete(f);
+        if exist('Trans')
+            [exp_data]=fn_verasonics_convert(Trans, Receive, RcvData);
+        end
 end
 
 

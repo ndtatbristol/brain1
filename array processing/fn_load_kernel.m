@@ -1,6 +1,6 @@
 function [focal_law] = fn_load_kernel(focal_law)
 
-if fn_check_for_gpu
+if fn_test_if_gpu_present_and_working
     if exist('fn_fast_DAS3','file')
         if ~isfield(focal_law, 'thread_size')
             focal_law.thread_size=128;

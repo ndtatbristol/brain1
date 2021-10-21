@@ -1,4 +1,4 @@
-function config = fn_get_config;
+function config = fn_get_config
 %Contains all configuration variables for brain
 
 %Default setup
@@ -25,6 +25,24 @@ config.array_ellipt_el_pts = 13;
 config.default_geom_linestyle = '-';
 
 %Files and file locations
+load_filter{1,1} = '*.mat'; load_filter{1,2} = 'Array data file (*.mat)';
+load_filter{2,1} = '*.mfmc'; load_filter{2,2} = 'MFMC format data file(*.mfmc)';
+load_filter{3,1} = '*.ndt'; load_filter{3,2} = 'Setup file (*.ndt)';
+load_filter{4,1} = '*.png'; load_filter{4,2} = 'Diagnostic sonar file (*.png)';
+load_filter{5,1} = '*.txt'; load_filter{5,2} = 'M2M CIVA file (*.txt)';
+save_filter{1,1} = '*.mat'; save_filter{1,2} = 'Array data file (*.mat)';
+save_filter{2,1} = '*.mfmc'; save_filter{2,2} = 'MFMC format data file (*.mfmc)';
+save_filter{3,1} = '*.ndt'; save_filter{3,2} = 'Setup file (*.ndt)';
+
+%for debugging only - male MFMC top one in list and use my desktop as
+%default location for data files
+% load_filter{1,1} = '*.mfmc'; load_filter{1,2} = 'MFMC format data file(*.mfmc)';
+% load_filter{2,1} = '*.mat'; load_filter{2,2} = 'Array data file (*.mat)';
+% save_filter{1,1} = '*.mfmc'; save_filter{1,2} = 'MFMC format data file (*.mfmc)';
+% save_filter{2,1} = '*.mat'; save_filter{2,2} = 'Array data file (*.mat)';
+config.default_setup.data_folder = 'C:\Users\mepdw\OneDrive - University of Bristol\Desktop';
+
+
 config.files.local_brain_path = 'Brain (local data)';
 config.files.imaging_path = 'Imaging';
 config.files.instruments_path = 'Instruments';
@@ -32,6 +50,11 @@ config.files.arrays_path = 'Arrays';
 config.files.materials_path = 'Materials';
 config.files.analysis_path = 'Analysis';
 config.files.setups_path = 'Setups';
+config.files.load_filter = load_filter;
+config.files.save_filter = save_filter;
+
+
+
 
 config.files.last_setup_file = 'last setup.ndt';
 
@@ -40,7 +63,7 @@ config.files.original_matlab_icon_file = ['Icons', filesep, 'original-matlab-ico
 
 %Main window details - title and version
 config.main_win.title = 'BRAIN';
-config.main_win.version = 1.9;
+config.main_win.version = 1.91;
 config.main_win.non_maximised_position = [0.1, 0.1, 0.8, 0.8];
 config.main_win.gpu = 0;
 
@@ -112,4 +135,10 @@ config.new_array_win.default_separation = 0.1e-3;
 config.new_array_win.default_length = 10e-3;
 config.new_array_win.default_no_els = 64;
 
-return
+%Physical stuff
+config.default_centre_freq = 5e6;
+config.default_fractional_bandwidth = 2;
+config.default_size_of_2d_image_in_pixels = 100;
+config.default_size_of_3d_image_in_pixels = 30;
+
+end

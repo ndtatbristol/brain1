@@ -1,5 +1,5 @@
 [Root]
-VersionDriverOEMPA=1.2.0.1
+VersionDriverOEMPA=1.2.1.0
 CycleCount=64
 FMCElementStart=0
 FMCElementStop=63
@@ -11,13 +11,13 @@ AscanBitSize=8Bits
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:0\Pulser]
@@ -27,7 +27,7 @@ Element=0
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:0\Receiver]
 WedgeDelay=0.00 us
@@ -45,13 +45,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:1\Pulser]
@@ -61,7 +61,7 @@ Element=1
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:1\Receiver]
 WedgeDelay=0.00 us
@@ -79,13 +79,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:2\Pulser]
@@ -95,7 +95,7 @@ Element=2
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:2\Receiver]
 WedgeDelay=0.00 us
@@ -113,13 +113,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:3\Pulser]
@@ -129,7 +129,7 @@ Element=3
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:3\Receiver]
 WedgeDelay=0.00 us
@@ -147,13 +147,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:4\Pulser]
@@ -163,7 +163,7 @@ Element=4
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:4\Receiver]
 WedgeDelay=0.00 us
@@ -181,13 +181,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:5\Pulser]
@@ -197,7 +197,7 @@ Element=5
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:5\Receiver]
 WedgeDelay=0.00 us
@@ -215,13 +215,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:6\Pulser]
@@ -231,7 +231,7 @@ Element=6
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:6\Receiver]
 WedgeDelay=0.00 us
@@ -249,13 +249,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:7\Pulser]
@@ -265,7 +265,7 @@ Element=7
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:7\Receiver]
 WedgeDelay=0.00 us
@@ -283,13 +283,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:8\Pulser]
@@ -299,7 +299,7 @@ Element=8
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:8\Receiver]
 WedgeDelay=0.00 us
@@ -317,13 +317,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:9\Pulser]
@@ -333,7 +333,7 @@ Element=9
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:9\Receiver]
 WedgeDelay=0.00 us
@@ -351,13 +351,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:10\Pulser]
@@ -367,7 +367,7 @@ Element=10
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:10\Receiver]
 WedgeDelay=0.00 us
@@ -385,13 +385,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:11\Pulser]
@@ -401,7 +401,7 @@ Element=11
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:11\Receiver]
 WedgeDelay=0.00 us
@@ -419,13 +419,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:12\Pulser]
@@ -435,7 +435,7 @@ Element=12
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:12\Receiver]
 WedgeDelay=0.00 us
@@ -453,13 +453,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:13\Pulser]
@@ -469,7 +469,7 @@ Element=13
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:13\Receiver]
 WedgeDelay=0.00 us
@@ -487,13 +487,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:14\Pulser]
@@ -503,7 +503,7 @@ Element=14
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:14\Receiver]
 WedgeDelay=0.00 us
@@ -521,13 +521,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:15\Pulser]
@@ -537,7 +537,7 @@ Element=15
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:15\Receiver]
 WedgeDelay=0.00 us
@@ -555,13 +555,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:16\Pulser]
@@ -571,7 +571,7 @@ Element=16
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:16\Receiver]
 WedgeDelay=0.00 us
@@ -589,13 +589,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:17\Pulser]
@@ -605,7 +605,7 @@ Element=17
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:17\Receiver]
 WedgeDelay=0.00 us
@@ -623,13 +623,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:18\Pulser]
@@ -639,7 +639,7 @@ Element=18
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:18\Receiver]
 WedgeDelay=0.00 us
@@ -657,13 +657,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:19\Pulser]
@@ -673,7 +673,7 @@ Element=19
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:19\Receiver]
 WedgeDelay=0.00 us
@@ -691,13 +691,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:20\Pulser]
@@ -707,7 +707,7 @@ Element=20
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:20\Receiver]
 WedgeDelay=0.00 us
@@ -725,13 +725,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:21\Pulser]
@@ -741,7 +741,7 @@ Element=21
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:21\Receiver]
 WedgeDelay=0.00 us
@@ -759,13 +759,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:22\Pulser]
@@ -775,7 +775,7 @@ Element=22
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:22\Receiver]
 WedgeDelay=0.00 us
@@ -793,13 +793,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:23\Pulser]
@@ -809,7 +809,7 @@ Element=23
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:23\Receiver]
 WedgeDelay=0.00 us
@@ -827,13 +827,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:24\Pulser]
@@ -843,7 +843,7 @@ Element=24
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:24\Receiver]
 WedgeDelay=0.00 us
@@ -861,13 +861,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:25\Pulser]
@@ -877,7 +877,7 @@ Element=25
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:25\Receiver]
 WedgeDelay=0.00 us
@@ -895,13 +895,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:26\Pulser]
@@ -911,7 +911,7 @@ Element=26
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:26\Receiver]
 WedgeDelay=0.00 us
@@ -929,13 +929,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:27\Pulser]
@@ -945,7 +945,7 @@ Element=27
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:27\Receiver]
 WedgeDelay=0.00 us
@@ -963,13 +963,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:28\Pulser]
@@ -979,7 +979,7 @@ Element=28
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:28\Receiver]
 WedgeDelay=0.00 us
@@ -997,13 +997,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:29\Pulser]
@@ -1013,7 +1013,7 @@ Element=29
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:29\Receiver]
 WedgeDelay=0.00 us
@@ -1031,13 +1031,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:30\Pulser]
@@ -1047,7 +1047,7 @@ Element=30
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:30\Receiver]
 WedgeDelay=0.00 us
@@ -1065,13 +1065,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:31\Pulser]
@@ -1081,7 +1081,7 @@ Element=31
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:31\Receiver]
 WedgeDelay=0.00 us
@@ -1099,13 +1099,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:32\Pulser]
@@ -1115,7 +1115,7 @@ Element=32
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:32\Receiver]
 WedgeDelay=0.00 us
@@ -1133,13 +1133,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:33\Pulser]
@@ -1149,7 +1149,7 @@ Element=33
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:33\Receiver]
 WedgeDelay=0.00 us
@@ -1167,13 +1167,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:34\Pulser]
@@ -1183,7 +1183,7 @@ Element=34
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:34\Receiver]
 WedgeDelay=0.00 us
@@ -1201,13 +1201,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:35\Pulser]
@@ -1217,7 +1217,7 @@ Element=35
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:35\Receiver]
 WedgeDelay=0.00 us
@@ -1235,13 +1235,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:36\Pulser]
@@ -1251,7 +1251,7 @@ Element=36
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:36\Receiver]
 WedgeDelay=0.00 us
@@ -1269,13 +1269,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:37\Pulser]
@@ -1285,7 +1285,7 @@ Element=37
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:37\Receiver]
 WedgeDelay=0.00 us
@@ -1303,13 +1303,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:38\Pulser]
@@ -1319,7 +1319,7 @@ Element=38
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:38\Receiver]
 WedgeDelay=0.00 us
@@ -1337,13 +1337,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:39\Pulser]
@@ -1353,7 +1353,7 @@ Element=39
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:39\Receiver]
 WedgeDelay=0.00 us
@@ -1371,13 +1371,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:40\Pulser]
@@ -1387,7 +1387,7 @@ Element=40
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:40\Receiver]
 WedgeDelay=0.00 us
@@ -1405,13 +1405,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:41\Pulser]
@@ -1421,7 +1421,7 @@ Element=41
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:41\Receiver]
 WedgeDelay=0.00 us
@@ -1439,13 +1439,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:42\Pulser]
@@ -1455,7 +1455,7 @@ Element=42
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:42\Receiver]
 WedgeDelay=0.00 us
@@ -1473,13 +1473,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:43\Pulser]
@@ -1489,7 +1489,7 @@ Element=43
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:43\Receiver]
 WedgeDelay=0.00 us
@@ -1507,13 +1507,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:44\Pulser]
@@ -1523,7 +1523,7 @@ Element=44
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:44\Receiver]
 WedgeDelay=0.00 us
@@ -1541,13 +1541,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:45\Pulser]
@@ -1557,7 +1557,7 @@ Element=45
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:45\Receiver]
 WedgeDelay=0.00 us
@@ -1575,13 +1575,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:46\Pulser]
@@ -1591,7 +1591,7 @@ Element=46
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:46\Receiver]
 WedgeDelay=0.00 us
@@ -1609,13 +1609,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:47\Pulser]
@@ -1625,7 +1625,7 @@ Element=47
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:47\Receiver]
 WedgeDelay=0.00 us
@@ -1643,13 +1643,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:48\Pulser]
@@ -1659,7 +1659,7 @@ Element=48
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:48\Receiver]
 WedgeDelay=0.00 us
@@ -1677,13 +1677,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:49\Pulser]
@@ -1693,7 +1693,7 @@ Element=49
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:49\Receiver]
 WedgeDelay=0.00 us
@@ -1711,13 +1711,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:50\Pulser]
@@ -1727,7 +1727,7 @@ Element=50
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:50\Receiver]
 WedgeDelay=0.00 us
@@ -1745,13 +1745,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:51\Pulser]
@@ -1761,7 +1761,7 @@ Element=51
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:51\Receiver]
 WedgeDelay=0.00 us
@@ -1779,13 +1779,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:52\Pulser]
@@ -1795,7 +1795,7 @@ Element=52
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:52\Receiver]
 WedgeDelay=0.00 us
@@ -1813,13 +1813,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:53\Pulser]
@@ -1829,7 +1829,7 @@ Element=53
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:53\Receiver]
 WedgeDelay=0.00 us
@@ -1847,13 +1847,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:54\Pulser]
@@ -1863,7 +1863,7 @@ Element=54
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:54\Receiver]
 WedgeDelay=0.00 us
@@ -1881,13 +1881,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:55\Pulser]
@@ -1897,7 +1897,7 @@ Element=55
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:55\Receiver]
 WedgeDelay=0.00 us
@@ -1915,13 +1915,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:56\Pulser]
@@ -1931,7 +1931,7 @@ Element=56
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:56\Receiver]
 WedgeDelay=0.00 us
@@ -1949,13 +1949,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:57\Pulser]
@@ -1965,7 +1965,7 @@ Element=57
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:57\Receiver]
 WedgeDelay=0.00 us
@@ -1983,13 +1983,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:58\Pulser]
@@ -1999,7 +1999,7 @@ Element=58
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:58\Receiver]
 WedgeDelay=0.00 us
@@ -2017,13 +2017,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:59\Pulser]
@@ -2033,7 +2033,7 @@ Element=59
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:59\Receiver]
 WedgeDelay=0.00 us
@@ -2051,13 +2051,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:60\Pulser]
@@ -2067,7 +2067,7 @@ Element=60
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:60\Receiver]
 WedgeDelay=0.00 us
@@ -2085,13 +2085,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:61\Pulser]
@@ -2101,7 +2101,7 @@ Element=61
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:61\Receiver]
 WedgeDelay=0.00 us
@@ -2119,13 +2119,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:62\Pulser]
@@ -2135,7 +2135,7 @@ Element=62
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:62\Receiver]
 WedgeDelay=0.00 us
@@ -2153,13 +2153,13 @@ FocalTimeOfFlight=0.0 us
 GainDigital=10.000000 dB
 BeamCorrection=0.0 dB
 Start=0.000000 us
-Range=20.000000 us
-TimeSlot=1024.0 us
-PointFactor=2
+Range=48.000000 us
+TimeSlot=1228.8 us
+PointFactor=4
 CompressionType=Decimation
 Rectification=Signed
 FilterIndex=1
-GainAnalog=5.000000 dB
+GainAnalog=20.000000 dB
 GateCount=0
 
 [Cycle:63\Pulser]
@@ -2169,7 +2169,7 @@ Element=63
 Delay.count=1;1
 Delay=0.00 us
 Width.count=1
-Width=0.05 us
+Width=0.10 us
 
 [Cycle:63\Receiver]
 WedgeDelay=0.00 us

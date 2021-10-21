@@ -7,6 +7,7 @@ end
 default_immersion_options.centre_freq = exp_data.array.centre_freq;
 default_immersion_options.couplant_velocity = 1480;
 default_immersion_options.extrapolate_surface = 0;
+default_immersion_options.max_angle_in_couplant = 0; %zero for no limit
 default_immersion_options.interp_pts_per_sample_wavelength = 0.5; %set to inf to get benchmark result
 default_immersion_options.surface_pts_per_sample_wavelength = 5;
 

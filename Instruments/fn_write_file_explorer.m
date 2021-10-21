@@ -9,6 +9,9 @@ fid = fopen([name,'.txt'],'w+t');
 % gain=amplify;
 % Width=width;
 %%
+if sample_bit ==14
+    sample_bit = 12;
+end
 element_start = 0;
 element_stop = cycles-1;
 element = [element_start:element_stop];

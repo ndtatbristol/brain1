@@ -56,6 +56,7 @@ try
 catch
     if display_results
         fprintf('failed\n');
+		fprintf(lasterr);
     end
     return
 end

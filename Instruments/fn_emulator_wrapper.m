@@ -93,6 +93,7 @@ options_sent = 0;
         tmp = load(fullfile('Instruments', 'Emulator data', options.fname));
         
         file_exp_data = tmp.exp_data;
+        file_exp_data.material = fn_material_from_exp_data(file_exp_data);
         
         %generate FMC data set - NB, data in these files must be either FMC
         %or HMC (not CSM or SAFT)
