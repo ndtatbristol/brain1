@@ -42,7 +42,7 @@ By far, *BRAIN* is installed.
 ## 3. Connect the PeakNDT MicroPulse System to Computer
 - connect the PeakNDT MicroPulse System and your computer via an Ethernet cable,
 - open **Control Panel**, click **Network Setting Centre**, click **Network and Sharing Centre**, click **Change Adapter Settings** shown on the left
-- Right click the ethernet icon which is for the PeakNDT MicroPulse System connection, then click the *Properties*,
+- Right click the ethernet icon which is connected to the PeakNDT MicroPulse System connection, then click the **Properties**,
 - In the **Networking** panel, find the **Internet Protocol Version 4 (TCP/IPv4)** option,
 - Choose **Use the following IP address:**, and change the **IP address** to 10.1.1.1,
 - Click **OK** to save all the changes.
