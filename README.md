@@ -26,6 +26,7 @@ winget install --id Git.Git -e --source winget
   ``` PowerShell
   git clone https://github.com/ultrasunix/total-focusing-method-2d-python-example.git
   ```
+  'xxx' is your computer username.
 By far, the *BRAIN* software is downloaded.
 
 ### 2.2 Add BRAIN to your MATLAB startup.m
