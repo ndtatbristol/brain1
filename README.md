@@ -2,13 +2,13 @@
 
 ## 1. Pre-installation
 Please make sure that you have installed *git* and *MATLAB* on your computer.
-### How to install 'git'?
+### 1.1 How to install 'git'?
 - *git* installer can be found from this link, [git-installer](https://git-scm.com/).
 - or, it can be installed via Windows PowerShell using *winget*, a package manager that is already available on Windows 11 and modern versions of Windows 10.
 ``` PowerShell
 winget install --id Git.Git -e --source winget
 ```
-### MATLAB installation and dependent Toolboxes
+### 1.2 MATLAB installation and dependent Toolboxes
 - *MATLAB* can be installed via its [official website](https://uk.mathworks.com/products/matlab.html)
 - Once *MATLAB* is installed, add these Toolboxes into your *MATLAB*:
 - [ ] Data Aacquisition Toolbox,
