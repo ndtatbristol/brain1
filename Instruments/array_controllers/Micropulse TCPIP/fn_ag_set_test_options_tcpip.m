@@ -233,7 +233,7 @@ for fl_ii = 1:transmit_laws %loop through focal laws
         fn_ag_send_command_tcpip(sprintf('RXF %i %i %i 0', fl_ii, rx_nos(rx_ii), rx_delay_law_array(fl_ii,rx_nos(rx_ii))), 0, echo_on);%law, ch, del, trim_amp
 
         if length(tx_nos)>1
-            tx_no(counter) = 1;
+            tx_no(counter) = fl_ii;
         else
             tx_no(counter) = tx_nos;
         end
